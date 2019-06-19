@@ -3,7 +3,7 @@
 
 void sokoban_display()
 {
-
+	//
 }
 
 void sokoban_reshape(int width, int height)
