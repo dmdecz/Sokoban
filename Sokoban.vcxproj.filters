@@ -19,6 +19,18 @@
     <Filter Include="头文件\view">
       <UniqueIdentifier>{bd95ebd0-8a7e-41ff-8e7b-f49d775e9cc8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\model">
+      <UniqueIdentifier>{a8e0dcfa-fe98-41fa-a382-2962c32e0634}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\control">
+      <UniqueIdentifier>{753ddb9c-e068-488d-bf81-2b9e227fb058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\model">
+      <UniqueIdentifier>{aef564ba-3785-46f2-ac13-1f5d689d6257}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\control">
+      <UniqueIdentifier>{89ebbfe1-cce9-46ff-b519-cd6ccb36cee3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -27,6 +39,12 @@
     <ClCompile Include="src\view\view.cpp">
       <Filter>源文件\view</Filter>
     </ClCompile>
+    <ClCompile Include="src\model\model.cpp">
+      <Filter>源文件\model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\control\control.cpp">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\view\glut.h">
@@ -34,6 +52,12 @@
     </ClInclude>
     <ClInclude Include="src\view\view.h">
       <Filter>头文件\view</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\model.h">
+      <Filter>头文件\model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\control\control.h">
+      <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
