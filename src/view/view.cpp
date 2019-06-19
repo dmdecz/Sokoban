@@ -1,30 +1,62 @@
 #include "view.h"
-#include "glut.h"
+#include "../model/model.h"
+#include "../glut.h"
 
-void sokoban_display()
-{
-	//
-}
+#include <iostream>
 
-void sokoban_reshape(int width, int height)
-{
-	if (height == 0)
-		height = 1;
-	sokoban_update_view(width, height);
-}
+namespace Sokoban {
 
-void sokoban_update_view(int width, int height)
-{
-	glViewport(0, 0, width, height);
+	void sokoban_display()
+	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glLoadIdentity();
+		gluLookAt(
+			eye[0], eye[1], eye[2],
+			center[0], center[1], center[2],
+			0, 1, 0
+		);
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)width / height, 0.1f, 100.0f);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_LIGHTING);
 
-	glMatrixMode(GL_MODELVIEW);
-}
+		glLightfv(GL_LIGHT0, GL_POSITION, eye.data());
+		glLightfv(GL_LIGHT0, GL_AMBIENT, vector<float>{1, 1, 1, 1}.data());
+		glEnable(GL_LIGHT0);
 
-void sokoban_idle()
-{
-	glutPostRedisplay();
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 10; j++)
+			{
+				glPushMatrix();
+				glTranslatef(i, j, 0);
+				map[i][j]->draw();
+				glPopMatrix();
+			}
+		}
+		glutSwapBuffers();
+	}
+
+	void sokoban_reshape(int width, int height)
+	{
+		if (height == 0)
+			height = 1;
+		sokoban_update_view(width, height);
+	}
+
+	void sokoban_update_view(int width, int height)
+	{
+		glViewport(0, 0, width, height);
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(45.0f, (GLfloat)width / height, 0.1f, 100.0f);
+
+		glMatrixMode(GL_MODELVIEW);
+	}
+
+	void sokoban_idle()
+	{
+		glutPostRedisplay();
+	}
+
 }

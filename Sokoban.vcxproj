@@ -26,8 +26,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\control\control.h" />
+    <ClInclude Include="src\glut.h" />
     <ClInclude Include="src\model\model.h" />
-    <ClInclude Include="src\view\glut.h" />
     <ClInclude Include="src\view\view.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

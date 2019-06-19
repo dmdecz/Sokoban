@@ -47,9 +47,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\view\glut.h">
-      <Filter>头文件\view</Filter>
-    </ClInclude>
     <ClInclude Include="src\view\view.h">
       <Filter>头文件\view</Filter>
     </ClInclude>
@@ -58,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="src\control\control.h">
       <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glut.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
