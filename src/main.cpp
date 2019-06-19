@@ -3,16 +3,17 @@
 
 #include <iostream>
 
-void Sokoban(int argc, char** argv);
+void Sokoban(int *argc, char** argv);
 
 int main(int argc, char **argv)
 {
 	std::cout << "Hello World!" << std::endl;
+	Sokoban(&argc, argv);
 }
 
-void Sokoban(int argc, char** argv)
+void Sokoban(int *argc, char** argv)
 {
-	glutInit(&argc, argv);
+	glutInit(argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
 	glutInitWindowSize(480, 480);
 
@@ -20,7 +21,7 @@ void Sokoban(int argc, char** argv)
 
 	glutDisplayFunc(sokoban_display);
 	glutReshapeFunc(sokoban_reshape);
-	glutKeyboardFunc();
+	//glutKeyboardFunc();
 	glutIdleFunc(sokoban_idle);
 
 	glutMainLoop();
