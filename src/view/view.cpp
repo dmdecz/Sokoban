@@ -6,7 +6,7 @@
 
 namespace Sokoban {
 
-	void sokoban_display()
+	void display()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
@@ -27,23 +27,20 @@ namespace Sokoban {
 		{
 			for (int j = 0; j < 10; j++)
 			{
-				glPushMatrix();
-				glTranslatef(i, j, 0);
 				map[i][j]->draw();
-				glPopMatrix();
 			}
 		}
 		glutSwapBuffers();
 	}
 
-	void sokoban_reshape(int width, int height)
+	void reshape(int width, int height)
 	{
 		if (height == 0)
 			height = 1;
-		sokoban_update_view(width, height);
+		update_view(width, height);
 	}
 
-	void sokoban_update_view(int width, int height)
+	void update_view(int width, int height)
 	{
 		glViewport(0, 0, width, height);
 
@@ -54,7 +51,7 @@ namespace Sokoban {
 		glMatrixMode(GL_MODELVIEW);
 	}
 
-	void sokoban_idle()
+	void idle()
 	{
 		glutPostRedisplay();
 	}

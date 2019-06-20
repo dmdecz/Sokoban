@@ -2,10 +2,10 @@
 
 namespace Sokoban {
 
-	void sokoban_display();
+	void display();
 
-	void sokoban_reshape(int width, int height);
-	void sokoban_update_view(int width, int height);
+	void reshape(int width, int height);
+	void update_view(int width, int height);
 
-	void sokoban_idle();
+	void idle();
 }

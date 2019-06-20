@@ -1,5 +1,6 @@
 #include "view/view.h"
 #include "model/model.h"
+#include "control/control.h"
 #include "glut.h"
 
 #include <iostream>
@@ -23,10 +24,10 @@ void Sokoban::Sokoban(int *argc, char** argv)
 	int window_handle = glutCreateWindow("Sokoban");
 	Sokoban::init_map();
 
-	glutDisplayFunc(Sokoban::sokoban_display);
-	glutReshapeFunc(Sokoban::sokoban_reshape);
-	//glutKeyboardFunc();
-	glutIdleFunc(sokoban_idle);
+	glutDisplayFunc(Sokoban::display);
+	glutReshapeFunc(Sokoban::reshape);
+	glutKeyboardFunc(Sokoban::keyboard);
+	glutIdleFunc(idle);
 
 	glutMainLoop();
 }
