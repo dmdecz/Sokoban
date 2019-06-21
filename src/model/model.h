@@ -72,14 +72,8 @@ namespace Sokoban {
 			move = { 0, 0, 0 };
 		}
 		virtual ~SolidCube() = default;
-		virtual void draw()
-		{
-			glPushMatrix();
-			glTranslatef(position[0] - move[0], position[1] - move[1], position[2] - move[2]);
-			move_once();
-			glutSolidCube(0.5);
-			glPopMatrix();
-		}
+		virtual void draw();
+		
 		virtual bool is_moving()
 		{
 			return moving;

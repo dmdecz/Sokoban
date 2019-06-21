@@ -1,10 +1,27 @@
 #include "view.h"
 #include "../model/model.h"
-#include "../glut.h"
 
 #include <iostream>
 
+namespace Texture {
+
+	vector<GLuint> textures(count);
+	vector<bmpImage*> images({
+		new bmpImage("../res/Crack.bmp"),
+	});
+}
+
 namespace Sokoban {
+	
+	void init_texture()
+	{
+		glGenTextures(Texture::count, Texture::textures.data());
+		// init texture for each image
+		for (int i=0; i<Texture::count; i++)
+		{
+			Texture::images[i]->initTexture(Texture::textures[i]);
+		}
+	}
 
 	void display()
 	{

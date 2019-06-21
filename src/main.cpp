@@ -23,6 +23,7 @@ void Sokoban::Sokoban(int *argc, char** argv)
 
 	int window_handle = glutCreateWindow("Sokoban");
 	Sokoban::init_map();
+	Sokoban::init_texture();
 
 	glutDisplayFunc(Sokoban::display);
 	glutReshapeFunc(Sokoban::reshape);
