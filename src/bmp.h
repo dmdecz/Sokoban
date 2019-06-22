@@ -6,6 +6,9 @@ typedef unsigned short WORD;
 typedef unsigned long DWORD;
 typedef unsigned char BYTE;
 typedef long LONG;
+typedef unsigned char uchar;
+typedef unsigned int uint;
+#define BMP_ID 0x4D42
 
 #pragma pack(1)
 
@@ -18,6 +21,8 @@ private:
 	WORD	bfReserved2;		//保留字，必须为0
 	DWORD	bfOffBits;			//图像数据起始位置，以字节为单位
 public:
+	bmpHeader() {}
+	bmpHeader(DWORD bfSize) : bfType(BMP_ID), bfSize(bfSize), bfReserved1(0), bfReserved2(0), bfOffBits(54) {}
 	DWORD getOffBits() { return bfOffBits;}
 	void setFileSize(DWORD size) { bfSize = size; }
 	void setOffBits(DWORD bits) { bfOffBits = bits; }
@@ -38,6 +43,11 @@ private:
 	DWORD	biClrUsed;			//颜色表中的颜色数
 	DWORD	biClrImportant;		//重要的颜色数
 public:
+	bmpInfoHeader() {}
+	bmpInfoHeader(LONG width, LONG height)
+		:biSize(sizeof(bmpInfoHeader)), biWidth(width), biHeight(height),
+		biPlanes(1), biBitCounts(24), biCompression(0), biSizeImage(width*height*3),
+		biXPelsPerMeter(1024), biYPelsPerMeter(1024), biClrUsed(0), biClrImportant(0) {}
 	bool havePalette() { return biBitCounts < 24; }
 	int getBits() { return biBitCounts; }
 	int getWidth() { return biWidth; }		//返回一行的像素数
@@ -66,11 +76,12 @@ private:
 	BYTE 	rgbRed;				//红色0-255
 	BYTE 	rgbReserved;		//保留字，必须为0
 public:
-	bmpColor() {}
+	bmpColor(): rgbBlue(0), rgbGreen(0), rgbRed(0), rgbReserved(0) {}
 	bmpColor(BYTE r, BYTE g, BYTE b) {
 		rgbRed = r;
 		rgbGreen = g;
 		rgbBlue = b;
+		rgbReserved = 0;
 	}
 	int getR() { return rgbRed; }
 	int getB() { return rgbBlue; }
@@ -86,9 +97,6 @@ private:
 
 #pragma pack()
 
-typedef unsigned char uchar;
-typedef unsigned int uint;
-
 class bmpImage
 {
 private:
@@ -97,8 +105,9 @@ private:
 	uchar* RGBdata;				// not BGR in bmp image
 public:
 	bmpImage(const char* filename);
+	bmpImage(int width, int height, uchar* data);
 	~bmpImage();
-
+	void write_back(const char *filename);
 	// get rgb data array
 	uchar* getRGBdata() { return RGBdata; }
 	// combine two texture

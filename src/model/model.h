@@ -1,13 +1,28 @@
 #pragma once
 
 #include "../glut.h"
+#include "../bmp.h"
 
 #include <cassert>
 #include <vector>
 #include <iostream>
+using namespace std;
 
-namespace Sokoban {
-	using std::vector;
+namespace Sokoban
+{
+	extern Object* map[10][10];
+	extern vector<Object*> object_list;
+	extern vector<float> eye;
+	extern vector<float> center;
+	extern vector<int> window_size;
+
+	// textures
+	extern const int texture_count;
+	extern enum TextureID;
+	extern vector<GLuint> textures;
+	extern vector<bmpImage*> texture_images;
+
+	void init_map();
 
 	template <class T>
 	const vector<T> operator+(const vector<T>& v1, const vector<T>& v2)
@@ -40,13 +55,6 @@ namespace Sokoban {
 		virtual const vector<int>& get_position() const = 0;
 	};
 
-	extern Object* map[10][10];
-	extern vector<Object*> object_list;
-	extern vector<float> eye;
-	extern vector<float> center;
-
-	void init_map();
-
 	class SolidCube : public Object
 	{
 	private:
@@ -57,11 +65,11 @@ namespace Sokoban {
 		void move_once()
 		{
 			if (fabs(move[0]) > 1e-4)
-				move[0] += (move[0] < 0) ? 0.1f : -0.1f;
+				move[0] += (move[0] < 0) ? 0.01f : -0.01f;
 			if (fabs(move[1]) > 1e-4)
-				move[1] += (move[1] < 0) ? 0.1f : -0.1f;
+				move[1] += (move[1] < 0) ? 0.01f : -0.01f;
 			if (fabs(move[2]) > 1e-4)
-				move[2] += (move[2] < 0) ? 0.1f : -0.1f;
+				move[2] += (move[2] < 0) ? 0.01f : -0.01f;
 			if (fabs(move[0]) < 1e-4 && fabs(move[1]) < 1e-4 && fabs(move[2]) < 1e-4)
 				moving = false;
 		}

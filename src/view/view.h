@@ -1,11 +1,13 @@
 #pragma once
 
-#include "bmp.h"
+#include "../bmp.h"
 #include "../glut.h"
 
 #include <vector>
+using namespace std;
 
-namespace Sokoban {
+namespace Sokoban
+{
 
 	void init_texture();
 
@@ -16,19 +18,4 @@ namespace Sokoban {
 
 	void idle();
 	void getFPS();
-}
-
-namespace Texture {
-	using std::vector;
-
-	// textures
-	static const int count = 1;
-	enum TextureID {
-		BOX
-	};
-
-	// texture ID
-	extern vector<GLuint> textures;
-	// images
-	extern vector<bmpImage*> images;
 }

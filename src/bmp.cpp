@@ -1,6 +1,6 @@
 #include "bmp.h"
-#include "../glut.h"
-#include "../gl.h"
+#include "glut.h"
+#include "gl.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -32,9 +32,47 @@ bmpImage::bmpImage(const char* filename)
 	in.close();
 }
 
+bmpImage::bmpImage(int width, int height, uchar* data)
+	: header(width*height*3 + sizeof(bmpHeader) + sizeof(bmpInfoHeader)),
+	  infoHeader(width, height)
+{
+	RGBdata = new uchar[width * height * 3];
+	memcpy(RGBdata, data, width * height * 3);
+}
+
 bmpImage::~bmpImage()
 {
 	delete[] RGBdata;
+}
+
+void bmpImage::write_back(const char* filename)
+{
+	ofstream fout(filename, ios::binary);
+
+	fout.write((char*)& header, sizeof(header));
+	fout.write((char*)& infoHeader, sizeof(infoHeader));
+
+	int dataSize = infoHeader.getDataSize();
+	cout << filename << endl;
+	cout << infoHeader.getWidth() << "x" << infoHeader.getHeight() << endl;
+	// swap r and b
+	for (int i = 0; i < dataSize; i += 3)
+	{
+		uchar t = RGBdata[i];
+		RGBdata[i] = RGBdata[i + 2];
+		RGBdata[i + 2] = t;
+	}
+
+	fout.seekp(header.getOffBits());
+	fout.write((char*)RGBdata, dataSize);
+	// swap r and b
+	for (int i = 0; i < dataSize; i += 3)
+	{
+		uchar t = RGBdata[i];
+		RGBdata[i] = RGBdata[i + 2];
+		RGBdata[i + 2] = t;
+	}
+	fout.close();
 }
 
 void bmpImage::initTexture(uint textureID)

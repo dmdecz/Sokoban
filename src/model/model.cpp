@@ -1,5 +1,4 @@
 #include "model.h"
-#include "../view/view.h"
 
 #include <vector>
 
@@ -9,6 +8,17 @@ namespace Sokoban {
 	vector<Object*> object_list;
 	vector<float> eye = {0, 0, 8};
 	vector<float> center = { 0, 0, 0 };
+	vector<int> window_size = { 640, 640 };
+
+	// textures
+	const int texture_count = 1;
+	enum TextureID {
+		BOX
+	};
+	vector<GLuint> textures(texture_count);
+	vector<bmpImage*> texture_images({
+		new bmpImage("res/Crack.bmp"),
+		});
 
 	void init_map()
 	{
@@ -16,7 +26,7 @@ namespace Sokoban {
 		{
 			for (int j = 0; j < 10; j++)
 			{
-				map[i][j] = new SolidCube({i, j, 0});
+				map[i][j] = new SolidCube({i, 0, -j});
 				object_list.push_back(map[i][j]);
 			}
 		}
@@ -31,7 +41,7 @@ namespace Sokoban {
 
 		// enable texture
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, Texture::textures[Texture::TextureID::BOX]);
+		glBindTexture(GL_TEXTURE_2D, textures[TextureID::BOX]);
 		// set texture coordinary for every surface
 		GLint borderPoint[4][2] = {
 			{1, 1}, {1, 0}, {0, 0}, {0, 1}

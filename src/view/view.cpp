@@ -3,23 +3,16 @@
 
 #include <iostream>
 
-namespace Texture {
 
-	vector<GLuint> textures(count);
-	vector<bmpImage*> images({
-		new bmpImage("res/Crack.bmp"),
-	});
-}
-
-namespace Sokoban {
-	
+namespace Sokoban
+{
 	void init_texture()
 	{
-		glGenTextures(Texture::count, Texture::textures.data());
+		glGenTextures(texture_count, textures.data());
 		// init texture for each image
-		for (int i=0; i<Texture::count; i++)
+		for (int i=0; i< texture_count; i++)
 		{
-			Texture::images[i]->initTexture(Texture::textures[i]);
+			texture_images[i]->initTexture(textures[i]);
 		}
 	}
 
@@ -55,6 +48,8 @@ namespace Sokoban {
 	{
 		if (height == 0)
 			height = 1;
+		window_size[0] = width;
+		window_size[1] = height;
 		update_view(width, height);
 	}
 
