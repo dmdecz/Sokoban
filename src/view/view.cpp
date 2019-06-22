@@ -7,7 +7,7 @@ namespace Texture {
 
 	vector<GLuint> textures(count);
 	vector<bmpImage*> images({
-		new bmpImage("../res/Crack.bmp"),
+		new bmpImage("res/Crack.bmp"),
 	});
 }
 
@@ -47,6 +47,7 @@ namespace Sokoban {
 				map[i][j]->draw();
 			}
 		}
+		getFPS();
 		glutSwapBuffers();
 	}
 
@@ -73,4 +74,39 @@ namespace Sokoban {
 		glutPostRedisplay();
 	}
 
+	void getFPS()
+	{
+		static int frame = 0, time, timebase = 0;
+		static char buffer[256];
+
+		char mode[64];
+
+		frame++;
+		time = glutGet(GLUT_ELAPSED_TIME);
+		if (time - timebase > 1000) {
+			sprintf_s(buffer, "FPS:%4.2f",
+				frame * 1000.0 / (time - timebase));
+			timebase = time;
+			frame = 0;
+		}
+
+		char* c;
+		glDisable(GL_DEPTH_TEST);
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		glOrtho(0, 480, 0, 480, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+		glRasterPos2f(10, 10);
+		for (c = buffer; *c != '\0'; c++) {
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+		}
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
+		glEnable(GL_DEPTH_TEST);
+	}
 }

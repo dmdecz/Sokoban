@@ -45,6 +45,9 @@
     <ClCompile Include="src\control\control.cpp">
       <Filter>源文件\control</Filter>
     </ClCompile>
+    <ClCompile Include="src\view\bmp.cpp">
+      <Filter>源文件\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\view\view.h">
@@ -58,6 +61,9 @@
     </ClInclude>
     <ClInclude Include="src\glut.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\bmp.h">
+      <Filter>头文件\view</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

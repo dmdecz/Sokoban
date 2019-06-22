@@ -15,6 +15,7 @@ namespace Sokoban {
 	void update_view(int width, int height);
 
 	void idle();
+	void getFPS();
 }
 
 namespace Texture {

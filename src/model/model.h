@@ -57,11 +57,11 @@ namespace Sokoban {
 		void move_once()
 		{
 			if (fabs(move[0]) > 1e-4)
-				move[0] += (move[0] < 0) ? 0.01f : -0.01f;
+				move[0] += (move[0] < 0) ? 0.1f : -0.1f;
 			if (fabs(move[1]) > 1e-4)
-				move[1] += (move[1] < 0) ? 0.01f : -0.01f;
+				move[1] += (move[1] < 0) ? 0.1f : -0.1f;
 			if (fabs(move[2]) > 1e-4)
-				move[2] += (move[2] < 0) ? 0.01f : -0.01f;
+				move[2] += (move[2] < 0) ? 0.1f : -0.1f;
 			if (fabs(move[0]) < 1e-4 && fabs(move[1]) < 1e-4 && fabs(move[2]) < 1e-4)
 				moving = false;
 		}
