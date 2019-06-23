@@ -18,7 +18,7 @@ namespace Sokoban {
 		lastmouseX = 0;
 		lastmouseY = 0;
 
-		speed = 0.05f;
+		speed = 0.5f;
 
 		yaw = 270.0f;
 		pitch = 0.0f;
@@ -47,20 +47,19 @@ namespace Sokoban {
 			break;
 		}
 		case 'j': {
-			eye = eye - cross(direction, up) * speed;
+			player_move(-cross(direction, up));
 			break;
 		}
 		case 'l': {
-			eye = eye + cross(direction, up) * speed;
+			player_move(cross(direction, up));
 			break;
 		}
 		case 'i': {
-			eye = eye + direction * speed;
+			player_move(direction);
 			break;
 		}
 		case 'k': {
-			eye = eye - direction * speed;
-			break;
+			player_move(-direction);
 		}
 		case 'z': {
 			zoomAngle += 2.0f;
@@ -118,5 +117,17 @@ namespace Sokoban {
 		direction[2] = cos(pitch / 180.0 * 3.14159) * sin(yaw / 180.0 * 3.14159);
 		direction = normalize(direction);
 		//std::cout << direction;
+	}
+
+	void player_move(vector<float> direction)
+	{
+		direction[1] = 0;
+		vector<float> map_p = map.map_position(eye);
+		vector<float> map_d = map.map_position(direction);
+		float end_x = map_p[0] + map_d[0];
+		float end_y = map_p[1] + map_d[1];
+
+		cout << map_p << endl;
+		eye = eye + direction * speed;
 	}
 }

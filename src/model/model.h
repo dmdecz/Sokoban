@@ -75,12 +75,22 @@ namespace Sokoban
 	}
 
 	template <class T>
-	const vector<T> operator*(const vector<T> &v1, const float f)
+	const vector<T> operator*(const vector<T> &v, const float f)
 	{
 		vector<T> ret;
-		int size = v1.size();
+		int size = v.size();
 		for (int i = 0; i < size; i++)
-			ret.push_back(v1[i] * f);
+			ret.push_back(v[i] * f);
+		return ret;
+	}
+
+	template <class T>
+	const vector<T> operator-(const vector<T>& v)
+	{
+		vector<T> ret;
+		int size = v.size();
+		for (int i = 0; i < size; i++)
+			ret.push_back(-v[i]);
 		return ret;
 	}
 
@@ -152,6 +162,9 @@ namespace Sokoban
 		vector<float> x;
 		vector<float> y;
 		vector<float> z;
+		vector<float> x_r;
+		vector<float> y_r;
+		vector<float> z_r;
 		float cube_len;
 
 	public:
@@ -169,10 +182,13 @@ namespace Sokoban
 				}
 			}
 			
-			o = { 0, 0, 0 };
+			o	= { 0, 0, 0 };
 			x = { 1, 0, 0 };
-			y = { 0, 0, 1 };
-			z = { 0, -1, 0 };
+			y = { 0, 0, -1 };
+			z = { 0, 1, 0 };
+			x_r	= { 1, 0, 0 };
+			y_r	= { 0, 0, 1 };
+			z_r = { 0, -1, 0 };
 		}
 		const vector<float> real_position(const vector<float>& position) const
 		{
@@ -181,6 +197,15 @@ namespace Sokoban
 			ret[0] = o[0] + position[0] * x[0] + position[1] * y[0] + position[2] * z[0];
 			ret[1] = o[1] + position[0] * x[1] + position[1] * y[1] + position[2] * z[1];
 			ret[2] = o[2] + position[0] * x[2] + position[1] * y[2] + position[2] * z[2];
+			return ret;
+		}
+		const vector<float> map_position(const vector<float>& position) const
+		{
+			assert(position.size() == 3);
+			vector<float> ret(3);
+			ret[0] = o[0] + position[0] * x_r[0] + position[1] * y_r[0] + position[2] * z_r[0];
+			ret[1] = o[1] + position[0] * x_r[1] + position[1] * y_r[1] + position[2] * z_r[1];
+			ret[2] = o[2] + position[0] * x_r[2] + position[1] * y_r[2] + position[2] * z_r[2];
 			return ret;
 		}
 		void set_object(Object* object, int x, int y, int z)
@@ -198,9 +223,9 @@ namespace Sokoban
 		{
 			glPushMatrix();
 			float matrix[] = {
-				x[0], y[0], z[0], o[0],
-				x[1], y[1], z[1], o[1],
-				x[2], y[2], z[2], o[2],
+				x_r[0], y_r[0], z_r[0], o[0],
+				x_r[1], y_r[1], z_r[1], o[1],
+				x_r[2], y_r[2], z_r[2], o[2],
 				0, 0, 0, 1
 			};
 			glMultMatrixf(matrix);

@@ -13,6 +13,8 @@ namespace Sokoban {
 
 	void mouseMotion(int x, int y);
 
+	void player_move(vector<float> direction);
+
 	template <class T>
 	vector<T> cross(vector<T> v1, vector<T> v2) {
 		vector<T> ret;
