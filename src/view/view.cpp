@@ -20,10 +20,12 @@ namespace Sokoban
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
+		vector<float> center;
+		center = eye + direction;
 		gluLookAt(
 			eye[0], eye[1], eye[2],
 			center[0], center[1], center[2],
-			0, 1, 0
+			up[0], up[1], up[2]
 		);
 
 		glEnable(GL_DEPTH_TEST);
@@ -48,8 +50,38 @@ namespace Sokoban
 				}
 			}
 		}
-		//getFPS();
+		display_bitmap();
 		glutSwapBuffers();
+	}
+
+	void display_bitmap()
+	{
+		glDisable(GL_LIGHTING);
+		glDisable(GL_DEPTH_TEST);
+		
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		glOrtho(0, window_size[0], 0, window_size[1], -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+		// FPS
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glRasterPos2f(10, 10);
+		char buffer[256];
+		sprintf_s(buffer, "FPS:%4.2f", getFPS());
+		for (char *c = buffer; *c != '\0'; c++) {
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+		}
+		glColor3f(0.0f, 1.0f, 0.0f);
+		glRasterPos2f(window_size[0] / 2, window_size[1] / 2);
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '+');
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void reshape(int width, int height)
@@ -67,7 +99,7 @@ namespace Sokoban
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(60.0f, (GLfloat)width / height, 0.1f, 100.0f);
+		gluPerspective(zoomAngle, (GLfloat)width / height, 0.1f, 100.0f);
 
 		glMatrixMode(GL_MODELVIEW);
 	}
@@ -77,39 +109,19 @@ namespace Sokoban
 		glutPostRedisplay();
 	}
 
-	void getFPS()
+	double getFPS()
 	{
-		static int frame = 0, time, timebase = 0;
-		static char buffer[256];
-
-		char mode[64];
+		static int frame = 0;
+		static double time, timebase = 0;
+		static double fps;
 
 		frame++;
 		time = glutGet(GLUT_ELAPSED_TIME);
 		if (time - timebase > 1000) {
-			sprintf_s(buffer, "FPS:%4.2f",
-				frame * 1000.0 / (time - timebase));
+			fps = frame * 1000.0 / (time - timebase);
 			timebase = time;
 			frame = 0;
 		}
-
-		char* c;
-		glDisable(GL_DEPTH_TEST);
-		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-		glLoadIdentity();
-		glOrtho(0, 480, 0, 480, -1, 1);
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glLoadIdentity();
-		glRasterPos2f(10, 10);
-		for (c = buffer; *c != '\0'; c++) {
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
-		}
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-		glEnable(GL_DEPTH_TEST);
+		return fps;
 	}
 }

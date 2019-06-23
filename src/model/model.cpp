@@ -6,8 +6,11 @@ namespace Sokoban {
 
 	Map map(10, 10);
 	vector<float> eye = {0.0f, 0.0f, 10.0f};
-	vector<float> center = { 0.0f, 0.0f, 2.0f };
+	vector<float> direction = { 0, 0, -1 };
+	vector<float> up = { 0, 1, 0 };
 	vector<int> window_size = { 640, 640 };
+	int windowHandle;
+	float zoomAngle = 45.0f;
 
 	// textures
 	const int texture_count = 1;

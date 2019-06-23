@@ -14,8 +14,11 @@ namespace Sokoban
 	class Map;
 	extern Map map;
 	extern vector<float> eye;
-	extern vector<float> center;
+	extern vector<float> direction;
+	extern vector<float> up;
 	extern vector<int> window_size;
+	extern int windowHandle;
+	extern float zoomAngle;
 
 	// textures
 	extern const int texture_count;
@@ -60,6 +63,16 @@ namespace Sokoban
 		}
 		out << " ]";
 		return out;
+	}
+
+	template <class T>
+	const vector<T> operator*(const vector<T> &v1, const float f)
+	{
+		vector<T> ret;
+		int size = v1.size();
+		for (int i = 0; i < size; i++)
+			ret.push_back(v1[i] * f);
+		return ret;
 	}
 
 	class Object

@@ -13,9 +13,6 @@ namespace Sokoban {
 int main(int argc, char **argv)
 {
 	//ShowCursor(false);
-	std::cout << "Hello World!" << std::endl;
-	//std::cout << glGetString(GL_VERSION) << std::endl;
-	printf("%s\n", glGetString(GL_VERSION));
 	Sokoban::Sokoban(&argc, argv);
 }
 
@@ -25,12 +22,16 @@ void Sokoban::Sokoban(int *argc, char** argv)
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
 	glutInitWindowSize(Sokoban::window_size[0], Sokoban::window_size[1]);
 
-	int window_handle = glutCreateWindow("Sokoban");
+	Sokoban::windowHandle = glutCreateWindow("Sokoban");
 	Sokoban::init_map();
 	Sokoban::init_texture();
 
 	glutDisplayFunc(Sokoban::display);
 	glutReshapeFunc(Sokoban::reshape);
+	glutWarpPointer(Sokoban::window_size[0] / 2, Sokoban::window_size[1] / 2);
+	glutMouseFunc(Sokoban::mouseClick);
+	glutMotionFunc(Sokoban::mouseMotion);
+	glutPassiveMotionFunc(Sokoban::mouseMotion);
 	glutKeyboardFunc(Sokoban::keyboard);
 	glutIdleFunc(idle);
 
