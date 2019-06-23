@@ -208,16 +208,23 @@ namespace Sokoban
 			ret[2] = o[2] + position[0] * x_r[2] + position[1] * y_r[2] + position[2] * z_r[2];
 			return ret;
 		}
-		void set_object(Object* object, int x, int y, int z)
+		void set_object(Object* object, int x, int y, int z = 0)
 		{
 			assert(x < size[0] && x >= 0);
 			assert(y < size[1] && y >= 0);
 			assert(z < size[2] && z >= 0);
 			map_data[z][y][x] = object;
 		}
-		Object* get_object(int x, int y, int z) const
+		Object* get_object(int x, int y, int z = 0) const
 		{
-			return map_data[z][y][x];
+			bool x_cond = x < size[0] && x >= 0;
+			bool y_cond = y < size[1] && y >= 0;
+			bool z_cond = z < size[2] && z >= 0;
+			if (x_cond && y_cond && z_cond) {
+				return map_data[z][y][x];
+			} else {
+				return nullptr;
+			}
 		}
 		void draw() const
 		{

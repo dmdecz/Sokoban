@@ -30,35 +30,35 @@ namespace Sokoban {
 	{
 		switch (key)
 		{
-		case 'a':
-			//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() - vector<int>{1, 0, 0});
-			break;
-		case 'd':
-			//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() + vector<int>{1, 0, 0});
-			break;
-		case 'w':
-			//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() + vector<int>{0, 1, 0});
-			break;
-		case 's':
-			//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() - vector<int>{0, 1, 0});
-			break;
+		//case 'a':
+		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() - vector<int>{1, 0, 0});
+		//	break;
+		//case 'd':
+		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() + vector<int>{1, 0, 0});
+		//	break;
+		//case 'w':
+		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() + vector<int>{0, 1, 0});
+		//	break;
+		//case 's':
+		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() - vector<int>{0, 1, 0});
+		//	break;
 		case ' ': {
 			screen_shot();
 			break;
 		}
-		case 'j': {
+		case 'a': {
 			player_move(-cross(direction, up));
 			break;
 		}
-		case 'l': {
+		case 'd': {
 			player_move(cross(direction, up));
 			break;
 		}
-		case 'i': {
+		case 'w': {
 			player_move(direction);
 			break;
 		}
-		case 'k': {
+		case 's': {
 			player_move(-direction);
 		}
 		case 'z': {
@@ -124,10 +124,20 @@ namespace Sokoban {
 		direction[1] = 0;
 		vector<float> map_p = map.map_position(eye);
 		vector<float> map_d = map.map_position(direction);
-		float end_x = map_p[0] + map_d[0];
-		float end_y = map_p[1] + map_d[1];
-
-		cout << map_p << endl;
+		float end_x = map_p[0] + map_d[0] + 0.5f;
+		float end_y = map_p[1] + map_d[1] + 0.5f;
+		vector<int> end_cube = { int(end_x), int(end_y) };
+		cout << floor(map_p[0]) << floor(map_p[1]) << endl;
+		cout << end_cube << endl;
+		if (map.get_object(end_cube[0], end_cube[1])) {
+			if (floor(map_p[0]) != end_cube[0]) {
+				map_d[0] = 0;
+			}
+			if (floor(map_p[1]) != end_cube[1]) {
+				map_d[1] = 0;
+			}
+		}
+		direction = map.real_position(map_d);
 		eye = eye + direction * speed;
 	}
 }
