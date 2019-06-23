@@ -76,6 +76,12 @@ namespace Sokoban
 		glColor3f(0.0f, 1.0f, 0.0f);
 		glRasterPos2f(window_size[0] / 2, window_size[1] / 2);
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '+');
+		glBegin(GL_QUADS);
+		glVertex3f(0, 0, 0);
+		glVertex3f(0, 1, 0);
+		glVertex3f(1, 1, 0);
+		glVertex3f(1, 0, 0);
+		glEnd();
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);

@@ -4,7 +4,7 @@
 
 namespace Sokoban {
 
-	Map map(1, 10);
+	Map map(10, 10);
 	vector<float> eye = {0.0f, 0.0f, 10.0f};
 	vector<float> direction = { 0, 0, -1 };
 	vector<float> up = { 0, 1, 0 };
@@ -53,15 +53,13 @@ namespace Sokoban {
 		};
 		GLfloat normal[3] = { 0, 0, 1 };
 
-		for(int i = 0; i < size[1]; i++)
-			for (int j = 0; j < size[0]; j++)
-			{
+		for (int i = 0; i < size[1]; i++) {
+			for (int j = 0; j < size[0]; j++) {
 				glPushMatrix();
 				glTranslatef(j, i, -half);
 
 				glBegin(GL_QUADS);
-				for(int k=0; k<4; k++)
-				{
+				for (int k = 0; k < 4; k++) {
 					glTexCoord2iv(borderPoint[k]);
 					glNormal3fv(normal);
 					glVertex3fv(Vertex[k]);
@@ -69,11 +67,25 @@ namespace Sokoban {
 				glEnd();
 				glPopMatrix();
 			}
-
+		}
 		// disable texture
 		glDisable(GL_TEXTURE_2D);
 
 		glPopMatrix();
+	}
+
+	void SolidCube::move_to(vector<int> end)
+	{
+		if (moving)
+			return;
+		assert(end.size() == 3);
+		map->set_object(nullptr, position[0], position[1], 0);
+		move[0] = (end[0] - position[0]) * 1.0;
+		move[1] = (end[1] - position[1]) * 1.0;
+		move[2] = (end[2] - position[2]) * 1.0;
+		position = end;
+		map->set_object(this, position[0], position[1], 0);
+		moving = true;
 	}
 
 	void SolidCube::draw()
@@ -133,6 +145,16 @@ namespace Sokoban {
 
 		//glutSolidCube(0.5);
 		glPopMatrix();
+	}
+
+	void screen_shot()
+	{
+		int width = window_size[0] % 4 ? (window_size[0] + 4 - window_size[0] % 4) : window_size[0];
+		uchar* screen_data = new uchar[width * window_size[1] * 3];
+		glReadPixels(0, 0, width, window_size[1], GL_RGB, GL_UNSIGNED_BYTE, screen_data);
+		bmpImage screen(width, window_size[1], screen_data);
+		screen.write_back("test.bmp");
+		delete[] screen_data;
 	}
 
 }

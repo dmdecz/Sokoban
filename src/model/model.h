@@ -120,18 +120,7 @@ namespace Sokoban
 		{
 			return moving;
 		}
-		virtual void move_to(vector<int> end)
-		{
-			if (moving)
-				return;
-			assert(end.size() == 3);
-			move[0] = (end[0] - position[0]) * 1.0;
-			move[1] = (end[1] - position[1]) * 1.0;
-			move[2] = (end[2] - position[2]) * 1.0;
-			position = end;
-			//map->set_object(this, end[0], end[1]);
-			moving = true;
-		}
+		virtual void move_to(vector<int> end);
 		virtual const vector<int>& get_position() const
 		{
 			cout << position << endl;
@@ -181,6 +170,9 @@ namespace Sokoban
 		}
 		void set_object(Object* object, int x, int y, int z)
 		{
+			assert(x < size[0] && x >= 0);
+			assert(y < size[1] && y >= 0);
+			assert(z < size[2] && z >= 0);
 			map_data[z][y][x] = object;
 		}
 		Object* get_object(int x, int y, int z) const
@@ -214,7 +206,9 @@ namespace Sokoban
 			for (int i = 0; i < size[2]; i++) {
 				for (int j = 0; j < size[1]; j++) {
 					for (int k = 0; k < size[0]; k++) {
-						delete map_data[i][j][k];
+						if (map_data[i][j][k]) {
+							delete map_data[i][j][k];
+						}
 					}
 					delete[] map_data[i][j];
 				}
@@ -229,5 +223,7 @@ namespace Sokoban
 			return cube_len;
 		}
 	};
+
+	void screen_shot();
 
 }
