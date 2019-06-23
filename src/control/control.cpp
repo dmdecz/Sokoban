@@ -169,17 +169,16 @@ namespace Sokoban {
 		vector<float> map_d = map.map_position(direction);
 		float end_x = map_p[0] + map_d[0];
 		float end_y = map_p[1] + map_d[1];
-		vector<int> end_cube = { int(end_x), int(end_y) };
-		cout << map_p << endl;
-		cout << floor(map_p[0]) << " " << floor(map_p[1]) << endl;
-		cout << end_cube << endl;
-		if (map.get_object(end_cube[0], end_cube[1]) && !map.get_object(end_cube[0], end_cube[1])->can_enter()) {
-			if (floor(map_p[0]) != end_cube[0]) {
-				map_d[0] = 0;
-			}
-			if (floor(map_p[1]) != end_cube[1]) {
-				map_d[1] = 0;
-			}
+		vector<int> end_cube_x = { int(end_x), int(floor(map_p[1])) };
+		vector<int> end_cube_y = { int(floor(map_p[0])), int(end_y) };
+
+		Object* cube_x = map.get_object(end_cube_x[0], end_cube_x[1]);
+		if (cube_x && !cube_x->can_enter() && end_cube_x[0] != floor(map_p[0])) {
+			map_d[0] = 0;
+		}
+		Object* cube_y = map.get_object(end_cube_y[0], end_cube_y[1]);
+		if (cube_y && !cube_y->can_enter() && end_cube_y[1] != floor(map_p[1])) {
+			map_d[1] = 0;
 		}
 		direction = map.real_position(map_d);
 		eye = eye + direction * speed;
