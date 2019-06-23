@@ -13,9 +13,6 @@ namespace Sokoban {
 int main(int argc, char **argv)
 {
 	//ShowCursor(false);
-	std::cout << "Hello World!" << std::endl;
-	//std::cout << glGetString(GL_VERSION) << std::endl;
-	printf("%s\n", glGetString(GL_VERSION));
 	Sokoban::Sokoban(&argc, argv);
 }
 
