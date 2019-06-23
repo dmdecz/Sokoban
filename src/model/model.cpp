@@ -31,6 +31,50 @@ namespace Sokoban {
 		//}
 	}
 
+	void Map::drawFloor()
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+
+		// enable texture
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, textures[TextureID::BOX]);
+		// set texture coordinary
+		GLint borderPoint[4][2] = {
+			{1, 1}, {1, 0}, {0, 0}, {0, 1}
+		};
+		double unitWidth = 1;
+		double half = unitWidth / 2;
+		// set real position vertex
+		GLfloat Vertex[4][3] = {
+			{ half,  half, 0}, { half, -half, 0}, {-half, -half, 0}, {-half,  half, 0}
+		};
+		GLfloat normal[3] = { 0, 0, 1 };
+
+		for(int i=0; i<10; i++)
+			for (int j = 0; j < 10; j++)
+			{
+				glPushMatrix();
+				vector<float> real_position = this->real_position({ float(i), float(j), 0 });
+				glTranslatef(real_position[0], real_position[1], real_position[2]);
+
+				glBegin(GL_QUADS);
+				for(int k=0; k<4; k++)
+				{
+					glTexCoord2iv(borderPoint[k]);
+					glNormal3fv(normal);
+					glVertex3fv(Vertex[k]);
+				}
+				glEnd();
+				glPopMatrix();
+			}
+
+		// disable texture
+		glDisable(GL_TEXTURE_2D);
+
+		glPopMatrix();
+	}
+
 	void SolidCube::draw()
 	{
 		glMatrixMode(GL_MODELVIEW);

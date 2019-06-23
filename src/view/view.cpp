@@ -35,6 +35,10 @@ namespace Sokoban
 		glLightfv(GL_LIGHT0, GL_AMBIENT, vector<float>{1, 1, 1, 1}.data());
 		glEnable(GL_LIGHT0);
 
+		// draw floor
+		map.drawFloor();
+
+		// draw objects
 		for (int i = 0; i < 10; i++)
 		{
 			for (int j = 0; j < 10; j++)

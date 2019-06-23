@@ -149,8 +149,8 @@ namespace Sokoban
 			}
 			o = { 0, 0, 0 };
 			x = { 1, 0, 0 };
-			y = { 0, 0, -1 };
-			z = { 0, 1, 0 };
+			y = { 0, 1, 0 };
+			z = { 0, 0, 1 };
 		}
 		const vector<float> real_position(const vector<float>& position) const
 		{
@@ -179,6 +179,8 @@ namespace Sokoban
 			}
 			delete[] map_data;
 		}
+
+		void drawFloor();
 	};
 
 }
