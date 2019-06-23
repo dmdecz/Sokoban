@@ -18,7 +18,7 @@ namespace Sokoban {
 		lastmouseX = 0;
 		lastmouseY = 0;
 
-		speed = 0.5f;
+		speed = 0.1f;
 
 		yaw = 270.0f;
 		pitch = 0.0f;
@@ -122,12 +122,13 @@ namespace Sokoban {
 	void player_move(vector<float> direction)
 	{
 		direction[1] = 0;
-		vector<float> map_p = map.map_position(eye);
+		vector<float> map_p = map.map_position(eye) + vector<float>{map.get_cube_len() / 2, map.get_cube_len() / 2, 0};
 		vector<float> map_d = map.map_position(direction);
-		float end_x = map_p[0] + map_d[0] + 0.5f;
-		float end_y = map_p[1] + map_d[1] + 0.5f;
+		float end_x = map_p[0] + map_d[0];
+		float end_y = map_p[1] + map_d[1];
 		vector<int> end_cube = { int(end_x), int(end_y) };
-		cout << floor(map_p[0]) << floor(map_p[1]) << endl;
+		cout << map_p << endl;
+		cout << floor(map_p[0]) << " " << floor(map_p[1]) << endl;
 		cout << end_cube << endl;
 		if (map.get_object(end_cube[0], end_cube[1])) {
 			if (floor(map_p[0]) != end_cube[0]) {
