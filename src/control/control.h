@@ -2,9 +2,10 @@
 #include <vector>
 #include <math.h>
 
-namespace Sokoban {
-	using std::vector;
+using namespace std;
 
+namespace Sokoban
+{
 	extern float speed;
 
 	void keyboard(unsigned char key, int  x, int y);

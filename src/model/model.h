@@ -114,7 +114,7 @@ namespace Sokoban
 		// move
 		void move_to(vector<int> end);
 		// draw
-		static void register_disp();
+		virtual void draw_directly();
 		virtual void draw();
 	};
 
@@ -205,6 +205,7 @@ namespace Sokoban
 		void set_object(Object* object, int x, int y, int z = 0);
 		Object* get_object(int x, int y, int z = 0) const;
 		float get_cube_len() const { return cube_len; }
+		const vector<int>& get_size() const { return size; }
 
 		// load map
 		void load(string filename);

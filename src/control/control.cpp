@@ -75,31 +75,84 @@ namespace Sokoban {
 		case 27: {
 			exit(0);
 		}
+		case '\r': {
+			init_paras();
+		}
 		default:
 			break;
 		}
 	}
 
-	void mouseClick(int button, int state, int x, int y) {
-		
+	void mouseClick(int button, int state, int x, int y)
+	{
+		GLuint selectBuffer[32];
+		GLint hits;
+		GLint viewport[4];
+		if (state == GLUT_DOWN && button == GLUT_LEFT_BUTTON)
+		{
+			glGetIntegerv(GL_VIEWPORT, viewport);
+			glSelectBuffer(32, selectBuffer);
+			glRenderMode(GL_SELECT);
+			glInitNames();
+			glPushName(0);
+			glMatrixMode(GL_PROJECTION);
+			glPushMatrix();
+			glLoadIdentity();
+			gluPickMatrix(x, viewport[3] - y, 2.0, 2.0, viewport);
+			cout << vector<GLint>{viewport[0], viewport[1], viewport[2], viewport[3] } << endl;
+			glOrtho(-10, 10, -10, 10, -5, 5);
+			map.draw();
+			glPopMatrix();
+			glFlush();
+			hits = glRenderMode(GL_RENDER);
+			std::cout << "hits" << hits << std::endl;
+			glMatrixMode(GL_MODELVIEW);
+			glutPostRedisplay();
+			if (hits == 0) return;
+			unsigned int i;
+			GLuint name, minz, maxz, min, minName;
+			for (i = 0; i < hits; i++)
+			{
+				minz = selectBuffer[1 + i * 4];
+				maxz = selectBuffer[2 + i * 4];
+				name = selectBuffer[3 + i * 4];
+				if (i == 0) {
+					min = minz;
+					minName = name;
+				}
+				else {
+					if (minz < min) {
+						min = minz;
+						minName = name;
+					}
+				}
+				std::cout << "name" << name << "minz" << minz << "maxz" << maxz << std::endl;
+			}
+			std::cout << "result" << minName << std::endl;
+		}
 	}
 
-	void mouseMotion(int x, int y) {
+	void mouseMotion(int x, int y)
+	{
+		//cout << eye << endl;
+		if (x == window_size[0] / 2 && y == window_size[1] / 2) {
+			return;
+		}
 		int xoffset, yoffset;
-		xoffset = x - lastmouseX;
-		yoffset = y - lastmouseY;
-		if (x < 0.05 * window_size[0] || x > 0.95 * window_size[0])
-		{
-			lastmouseX = window_size[0] / 2;
-			glutWarpPointer(window_size[0] / 2, y);
-		}
+		xoffset = x - window_size[0] / 2;
+		yoffset = y - window_size[1] / 2;
+		//if (x < 0.05 * window_size[0] || x > 0.95 * window_size[0])
+		//{
+		//	lastmouseX = window_size[0] / 2;
+		//	glutWarpPointer(window_size[0] / 2, y);
+		//}
 
-		if (y < 0.05 * window_size[1] || y > 0.95 * window_size[1]) {
-			lastmouseY = window_size[1] / 2;
-			glutWarpPointer(x, window_size[1] / 2);
-		}
-		lastmouseX = x;
-		lastmouseY = y;
+		//if (y < 0.05 * window_size[1] || y > 0.95 * window_size[1]) {
+		//	lastmouseY = window_size[1] / 2;
+		//	glutWarpPointer(x, window_size[1] / 2);
+		//}
+		//lastmouseX = x;
+		//lastmouseY = y;
 		xoffset *= 0.5f;
 		yoffset *= 0.5f;
 		//std::cout << xoffset << "  " << yoffset << std::endl;
@@ -116,6 +169,7 @@ namespace Sokoban {
 		direction[1] = sin(pitch / 180.0 * 3.14159);
 		direction[2] = cos(pitch / 180.0 * 3.14159) * sin(yaw / 180.0 * 3.14159);
 		direction = normalize(direction);
+		glutWarpPointer(window_size[0] / 2, window_size[1] / 2);
 		//std::cout << direction;
 	}
 
@@ -127,9 +181,9 @@ namespace Sokoban {
 		float end_x = map_p[0] + map_d[0];
 		float end_y = map_p[1] + map_d[1];
 		vector<int> end_cube = { int(end_x), int(end_y) };
-		cout << map_p << endl;
-		cout << floor(map_p[0]) << " " << floor(map_p[1]) << endl;
-		cout << end_cube << endl;
+		//cout << map_p << endl;
+		//cout << floor(map_p[0]) << " " << floor(map_p[1]) << endl;
+		//cout << end_cube << endl;
 		if (map.get_object(end_cube[0], end_cube[1]) && !map.get_object(end_cube[0], end_cube[1])->can_enter()) {
 			if (floor(map_p[0]) != end_cube[0]) {
 				map_d[0] = 0;

@@ -33,7 +33,7 @@ void SolidCube::move_to(vector<int> end)
 	moving = true;
 }
 
-void SolidCube::register_disp()
+void SolidCube::draw_directly()
 {
 	glMatrixMode(GL_MODELVIEW);
 
@@ -73,15 +73,19 @@ void SolidCube::register_disp()
 	};
 	glPushMatrix();
 
-	glBegin(GL_QUADS);
-	for (int i = 0; i < 6; i++)
+	
+	for (int i = 0; i < 6; i++) {
+		GLuint name = (position[2] * Sokoban::map.get_size()[0] + position[1]) * 6 + i;
+		glLoadName(name);
+		glBegin(GL_QUADS);
 		for (int j = 0; j < 4; j++)
 		{
 			glTexCoord2iv(borderPoint[j]);
 			glNormal3fv(normal[i]);
 			glVertex3fv(cubeVertex[i][j]);
 		}
-	glEnd();
+		glEnd();
+	}
 
 	glPopMatrix();
 
@@ -98,7 +102,8 @@ void SolidCube::draw()
 	glTranslatef(position[0] - move[0], position[1] - move[1], position[2] - move[2]);
 	move_once();
 
-	glCallList(Sokoban::display_list[BOX_Disp]);
+	//glCallList(Sokoban::display_list[BOX_Disp]);
+	draw_directly();
 
 	glPopMatrix();
 }

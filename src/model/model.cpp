@@ -72,7 +72,7 @@ namespace Sokoban {
 
 		// solid cube
 		glNewList(display_list[BOX_Disp], GL_COMPILE);
-			SolidCube::register_disp();
+			
 		glEndList();
 
 		// floor

@@ -26,6 +26,14 @@ Map::Map(int x_size, int y_size, int z_size) : size({ x_size, y_size, z_size })
 	y_r = { 0, 0, 1 };
 	z_r = { 0, -1, 0 };
 
+	//x = { 1, 0, 0 };
+	//y = { 0, 1, 0 };
+	//z = { 0, 0, 1 };
+
+	//x_r = { 1, 0, 0 };
+	//y_r = { 0, 1, 0 };
+	//z_r = { 0, 0, 1 };
+
 	dstNum = 0;
 	completeNum = 0;
 }
@@ -126,7 +134,7 @@ void Map::register_disp_floor()
 
 	// enable texture
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, textures[TextureID::BOX]);
+	glBindTexture(GL_TEXTURE_2D, textures[TextureID::Floor]);
 	// set texture coordinary
 	GLint borderPoint[4][2] = {
 		{1, 1}, {1, 0}, {0, 0}, {0, 1}
