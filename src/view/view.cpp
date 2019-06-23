@@ -38,18 +38,10 @@ namespace Sokoban
 		glEnable(GL_LIGHT0);
 
 		// draw floor
-		map.drawFloor();
+		//map.drawFloor();
 
 		// draw objects
-		for (int i = 0; i < 10; i++)
-		{
-			for (int j = 0; j < 10; j++)
-			{
-				if (map.get_object(i, j)) {
-					map.get_object(i, j)->draw();
-				}
-			}
-		}
+		map.draw();
 		display_bitmap();
 		glutSwapBuffers();
 	}

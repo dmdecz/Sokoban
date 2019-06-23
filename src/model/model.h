@@ -142,28 +142,33 @@ namespace Sokoban
 	class Map
 	{
 	private:
-		Object*** map_data;
-		int width;
-		int height;
+		Object**** map_data;
+		vector<int> size;
 		vector<float> o;
 		vector<float> x;
 		vector<float> y;
 		vector<float> z;
+		float cube_len;
 
 	public:
-		Map(int width, int height): width(width), height(height)
+		Map(int x_size, int y_size, int z_size = 1): size({x_size, y_size, z_size})
 		{
-			map_data = new Object * *[height];
-			for (int i = 0; i < height; i++) {
-				map_data[i] = new Object * [width];
-				for (int j = 0; j < width; j++) {
-					map_data[i][j] = new SolidCube(this, { i, j, 0 });
+			cube_len = 1;
+			map_data = new Object***[size[2]];
+			for (int i = 0; i < size[2]; i++) {
+				map_data[i] = new Object * *[size[1]];
+				for (int j = 0; j < size[1]; j++) {
+					map_data[i][j] = new Object * [size[0]];
+					for (int k = 0; k < size[0]; k++) {
+						map_data[i][j][k] = new SolidCube(this, { k, j, i });
+					}
 				}
 			}
+			
 			o = { 0, 0, 0 };
 			x = { 1, 0, 0 };
-			y = { 0, 1, 0 };
-			z = { 0, 0, 1 };
+			y = { 0, 0, 1 };
+			z = { 0, -1, 0 };
 		}
 		const vector<float> real_position(const vector<float>& position) const
 		{
@@ -174,26 +179,55 @@ namespace Sokoban
 			ret[2] = o[2] + position[0] * x[2] + position[1] * y[2] + position[2] * z[2];
 			return ret;
 		}
-		void set_object(Object* object, int x, int y)
+		void set_object(Object* object, int x, int y, int z)
 		{
-			map_data[x][y] = object;
+			map_data[z][y][x] = object;
 		}
-		Object* get_object(int x, int y) const
+		Object* get_object(int x, int y, int z) const
 		{
-			return map_data[x][y];
+			return map_data[z][y][x];
+		}
+		void draw() const
+		{
+			glPushMatrix();
+			float matrix[] = {
+				x[0], y[0], z[0], o[0],
+				x[1], y[1], z[1], o[1],
+				x[2], y[2], z[2], o[2],
+				0, 0, 0, 1
+			};
+			glMultMatrixf(matrix);
+			drawFloor();
+			for (int i = 0; i < size[0]; i++) {
+				for (int j = 0; j < size[1]; j++) {
+					for (int k = 0; k < size[2]; k++) {
+						if (map.get_object(i, j, k)) {
+							map.get_object(i, j, k)->draw();
+						}
+					}
+				}
+			}
+			glPopMatrix();
 		}
 		~Map()
 		{
-			for (int i = 0; i < height; i++) {
-				for (int j = 0; j < width; j++) {
-					delete map_data[i][j];
+			for (int i = 0; i < size[2]; i++) {
+				for (int j = 0; j < size[1]; j++) {
+					for (int k = 0; k < size[0]; k++) {
+						delete map_data[i][j][k];
+					}
+					delete[] map_data[i][j];
 				}
 				delete[] map_data[i];
 			}
 			delete[] map_data;
 		}
 
-		void drawFloor();
+		void drawFloor() const;
+		float get_cube_len() const
+		{
+			return cube_len;
+		}
 	};
 
 }

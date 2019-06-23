@@ -6,13 +6,14 @@
 
 #include <iostream>
 
-namespace Sokoban {
+namespace Sokoban
+{
 	void Sokoban(int *argc, char **argv);
 }
 
 int main(int argc, char **argv)
 {
-	//ShowCursor(false);
+	ShowCursor(false);
 	Sokoban::Sokoban(&argc, argv);
 }
 

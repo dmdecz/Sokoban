@@ -10,7 +10,7 @@ namespace Sokoban {
 	int lastmouseX;
 	int lastmouseY;
 	float speed = 0.05f;
-	float yaw = 0.0f, pitch = 0.0f;
+	float yaw = 270.0f, pitch = 0.0f;
 	bool mouseAdjust = false;
 
 	void keyboard(unsigned char key, int  x, int y)
@@ -18,16 +18,16 @@ namespace Sokoban {
 		switch (key)
 		{
 		case 'a':
-			map.get_object(0, 0)->move_to(map.get_object(0, 0)->get_position() - vector<int>{1, 0, 0});
+			map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() - vector<int>{1, 0, 0});
 			break;
 		case 'd':
-			map.get_object(0, 0)->move_to(map.get_object(0, 0)->get_position() + vector<int>{1, 0, 0});
+			map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() + vector<int>{1, 0, 0});
 			break;
 		case 'w':
-			map.get_object(0, 0)->move_to(map.get_object(0, 0)->get_position() + vector<int>{0, 1, 0});
+			map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() + vector<int>{0, 1, 0});
 			break;
 		case 's':
-			map.get_object(0, 0)->move_to(map.get_object(0, 0)->get_position() - vector<int>{0, 1, 0});
+			map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() - vector<int>{0, 1, 0});
 			break;
 		case ' ': {
 			int width = window_size[0] % 4 ? (window_size[0] + 4 - window_size[0] % 4) : window_size[0];
