@@ -10,7 +10,7 @@ namespace Sokoban
 	{
 		glGenTextures(texture_count, textures.data());
 		// init texture for each image
-		for (int i=0; i< texture_count; i++)
+		for (int i = 0; i< texture_count; i++)
 		{
 			texture_images[i]->initTexture(textures[i]);
 		}
@@ -29,7 +29,9 @@ namespace Sokoban
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_LIGHTING);
 
-		glLightfv(GL_LIGHT0, GL_POSITION, eye.data());
+		vector<float> light_position = eye;
+		light_position.push_back(1);
+		glLightfv(GL_LIGHT0, GL_POSITION, light_position.data());
 		glLightfv(GL_LIGHT0, GL_AMBIENT, vector<float>{1, 1, 1, 1}.data());
 		glEnable(GL_LIGHT0);
 
@@ -37,10 +39,10 @@ namespace Sokoban
 		{
 			for (int j = 0; j < 10; j++)
 			{
-				map[i][j]->draw();
+				map.get_object(i, j)->draw();
 			}
 		}
-		getFPS();
+		//getFPS();
 		glutSwapBuffers();
 	}
 
@@ -59,7 +61,7 @@ namespace Sokoban
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(45.0f, (GLfloat)width / height, 0.1f, 100.0f);
+		gluPerspective(60.0f, (GLfloat)width / height, 0.1f, 100.0f);
 
 		glMatrixMode(GL_MODELVIEW);
 	}

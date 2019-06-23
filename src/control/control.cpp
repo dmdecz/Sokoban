@@ -21,7 +21,8 @@ namespace Sokoban {
 			object_list[0]->move_to(object_list[0]->get_position() + vector<int>{0, 1, 0});
 			break;
 		case 's':
-			object_list[0]->move_to(object_list[0]->get_position() - vector<int>{0, 1, 0});
+			object_list[0]->get_position();
+			//object_list[0]->move_to(object_list[0]->get_position() - vector<int>{0, 1, 0});
 			break;
 		case ' ': {
 			int width = window_size[0] % 4 ? (window_size[0] + 4 - window_size[0] % 4) : window_size[0];
