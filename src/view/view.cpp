@@ -20,10 +20,12 @@ namespace Sokoban
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
+		vector<float> center;
+		center = eye + direction;
 		gluLookAt(
 			eye[0], eye[1], eye[2],
 			center[0], center[1], center[2],
-			0, 1, 0
+			up[0], up[1], up[2]
 		);
 
 		glEnable(GL_DEPTH_TEST);
@@ -63,7 +65,7 @@ namespace Sokoban
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(60.0f, (GLfloat)width / height, 0.1f, 100.0f);
+		gluPerspective(zoomAngle, (GLfloat)width / height, 0.1f, 100.0f);
 
 		glMatrixMode(GL_MODELVIEW);
 	}
