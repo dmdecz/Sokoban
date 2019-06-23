@@ -147,6 +147,15 @@ namespace Sokoban {
 	void SolidCube::register_disp()
 	{
 		glMatrixMode(GL_MODELVIEW);
+
+		float ambient[]	= { 0.2f, 0.0f, 0.0f, 1.0f };
+		float specular[]= { 1.0f, 0.0f, 0.0f, 1.0f };
+		float diffuse[]	= { 1.0f, 0.0f, 0.0f, 1.0f };
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+
 		glPushMatrix();
 
 		// enable texture
@@ -174,6 +183,7 @@ namespace Sokoban {
 			{ 0,  1,  0}
 		};
 		glPushMatrix();
+
 		glBegin(GL_QUADS);
 		for (int i = 0; i < 6; i++)
 			for (int j = 0; j < 4; j++)
@@ -183,6 +193,7 @@ namespace Sokoban {
 				glVertex3fv(cubeVertex[i][j]);
 			}
 		glEnd();
+
 		glPopMatrix();
 
 		// disable texture
