@@ -39,7 +39,9 @@ namespace Sokoban
 		{
 			for (int j = 0; j < 10; j++)
 			{
-				map.get_object(i, j)->draw();
+				if (map.get_object(i, j)) {
+					map.get_object(i, j)->draw();
+				}
 			}
 		}
 		//getFPS();

@@ -13,7 +13,6 @@ namespace Sokoban
 	class Object;
 	class Map;
 	extern Map map;
-	extern vector<Object*> object_list;
 	extern vector<float> eye;
 	extern vector<float> center;
 	extern vector<int> window_size;
@@ -146,8 +145,6 @@ namespace Sokoban
 				map_data[i] = new Object * [width];
 				for (int j = 0; j < width; j++) {
 					map_data[i][j] = new SolidCube(this, { i, j, 0 });
-					object_list.push_back(map_data[i][j]);
-					cout << object_list << endl;
 				}
 			}
 			o = { 0, 0, 0 };

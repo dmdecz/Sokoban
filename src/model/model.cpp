@@ -5,7 +5,6 @@
 namespace Sokoban {
 
 	Map map(10, 10);
-	vector<Object*> object_list;
 	vector<float> eye = {0.0f, 0.0f, 10.0f};
 	vector<float> center = { 0.0f, 0.0f, 2.0f };
 	vector<int> window_size = { 640, 640 };
