@@ -2,6 +2,7 @@
 #include "../model/model.h"
 #include "../bmp.h"
 #include "../glut.h"
+#include "..//view/view.h"
 
 #include <iostream>
 
@@ -69,7 +70,6 @@ namespace Sokoban {
 		case 'c': {
 			zoomAngle -= 2.0f;
 			if (zoomAngle < 15.0f) zoomAngle = 15.0f;
-
 			break;
 		}
 		case 27: {
@@ -99,15 +99,18 @@ namespace Sokoban {
 			glPushMatrix();
 			glLoadIdentity();
 			gluPickMatrix(x, viewport[3] - y, 2.0, 2.0, viewport);
-			cout << vector<GLint>{viewport[0], viewport[1], viewport[2], viewport[3] } << endl;
-			glOrtho(-10, 10, -10, 10, -5, 5);
+			glOrtho(-10, 10, -10, 10, 0, 2);
+			glMatrixMode(GL_MODELVIEW);
 			map.draw();
+			glMatrixMode(GL_PROJECTION);
 			glPopMatrix();
 			glFlush();
 			hits = glRenderMode(GL_RENDER);
-			std::cout << "hits" << hits << std::endl;
+			std::cout << "hits " << hits << std::endl;
 			glMatrixMode(GL_MODELVIEW);
 			glutPostRedisplay();
+			reshape(window_size[0], window_size[1]);
+
 			if (hits == 0) return;
 			unsigned int i;
 			GLuint name, minz, maxz, min, minName;
@@ -134,33 +137,20 @@ namespace Sokoban {
 
 	void mouseMotion(int x, int y)
 	{
-		//cout << eye << endl;
 		if (x == window_size[0] / 2 && y == window_size[1] / 2) {
 			return;
 		}
 		int xoffset, yoffset;
 		xoffset = x - window_size[0] / 2;
 		yoffset = y - window_size[1] / 2;
-		//if (x < 0.05 * window_size[0] || x > 0.95 * window_size[0])
-		//{
-		//	lastmouseX = window_size[0] / 2;
-		//	glutWarpPointer(window_size[0] / 2, y);
-		//}
-
-		//if (y < 0.05 * window_size[1] || y > 0.95 * window_size[1]) {
-		//	lastmouseY = window_size[1] / 2;
-		//	glutWarpPointer(x, window_size[1] / 2);
-		//}
-		//lastmouseX = x;
-		//lastmouseY = y;
 		xoffset *= 0.5f;
 		yoffset *= 0.5f;
-		//std::cout << xoffset << "  " << yoffset << std::endl;
+
 		if (xoffset > window_size[0] / 8 || xoffset < -window_size[0] / 8) return;
 		if (yoffset > window_size[1] / 8 || yoffset < -window_size[1] / 8) return;
 		yaw += xoffset;
 		pitch -= yoffset;
-		//std::cout << "yaw" << yaw << "pitch" << pitch << std::endl;
+
 		if (pitch > 89.0f) pitch = 89.0f;
 		if (pitch < -89.0f) pitch = -89.0f;
 		if (yaw > 360.0f) yaw -= 360.0f;
@@ -170,7 +160,6 @@ namespace Sokoban {
 		direction[2] = cos(pitch / 180.0 * 3.14159) * sin(yaw / 180.0 * 3.14159);
 		direction = normalize(direction);
 		glutWarpPointer(window_size[0] / 2, window_size[1] / 2);
-		//std::cout << direction;
 	}
 
 	void player_move(vector<float> direction)
@@ -181,9 +170,9 @@ namespace Sokoban {
 		float end_x = map_p[0] + map_d[0];
 		float end_y = map_p[1] + map_d[1];
 		vector<int> end_cube = { int(end_x), int(end_y) };
-		//cout << map_p << endl;
-		//cout << floor(map_p[0]) << " " << floor(map_p[1]) << endl;
-		//cout << end_cube << endl;
+		cout << map_p << endl;
+		cout << floor(map_p[0]) << " " << floor(map_p[1]) << endl;
+		cout << end_cube << endl;
 		if (map.get_object(end_cube[0], end_cube[1]) && !map.get_object(end_cube[0], end_cube[1])->can_enter()) {
 			if (floor(map_p[0]) != end_cube[0]) {
 				map_d[0] = 0;

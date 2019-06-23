@@ -166,7 +166,7 @@ void Map::drawFloor() const
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
-	for (int i = 0; i < size[1]; i++)
+	for (int i = 0; i < size[1]; i++) {
 		for (int j = 0; j < size[0]; j++)
 		{
 			glPushMatrix();
@@ -176,6 +176,7 @@ void Map::drawFloor() const
 
 			glPopMatrix();
 		}
+	}
 
 	glPopMatrix();
 }

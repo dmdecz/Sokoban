@@ -54,7 +54,7 @@ void SolidCube::draw_directly()
 	GLint borderPoint[4][2] = {
 		{1, 1}, {1, 0}, {0, 0}, {0, 1}
 	};
-	GLfloat half = Sokoban::map.get_cube_len() / 4;
+	GLfloat half = Sokoban::map.get_cube_len() / 2;
 	GLfloat cubeVertex[6][4][3] = {
 		{ { half,  half,  half}, {-half,  half,  half}, {-half, -half,  half}, { half, -half,  half} },
 		{ { half,  half, -half}, { half, -half, -half}, {-half, -half, -half}, {-half,  half, -half} },
@@ -75,7 +75,7 @@ void SolidCube::draw_directly()
 
 	
 	for (int i = 0; i < 6; i++) {
-		GLuint name = (position[2] * Sokoban::map.get_size()[0] + position[1]) * 6 + i;
+		GLuint name = (position[1] * Sokoban::map.get_size()[0] + position[0]) * 6 + i;
 		glLoadName(name);
 		glBegin(GL_QUADS);
 		for (int j = 0; j < 4; j++)
