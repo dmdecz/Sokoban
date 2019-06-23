@@ -70,6 +70,7 @@ namespace Sokoban
 
 		virtual bool is_movable() = 0;
 		virtual bool is_moving() = 0;
+		virtual bool can_enter() = 0;
 		virtual const vector<int>& get_position() const = 0;
 	};
 
@@ -86,6 +87,7 @@ namespace Sokoban
 		virtual bool is_movable() { return false; }
 		virtual bool is_moving() { return false; }
 		virtual const vector<int>& get_position() const { return position; }
+		virtual bool can_enter() { return true; }
 		// draw
 		static void register_disp();
 		virtual void draw();
@@ -108,6 +110,7 @@ namespace Sokoban
 		virtual bool is_movable() { return true; }
 		virtual bool is_moving() { return moving; }
 		virtual const vector<int>& get_position() const { return position; }
+		virtual bool can_enter() { return false; }
 		// move
 		void move_to(vector<int> end);
 		// draw
@@ -128,6 +131,7 @@ namespace Sokoban
 		virtual bool is_movable() { return false; }
 		virtual bool is_moving() { return false; }
 		virtual const vector<int>& get_position() const { return position; }
+		virtual bool can_enter() { return false; }
 		// draw
 		static void register_disp();
 		virtual void draw();
@@ -146,6 +150,7 @@ namespace Sokoban
 		virtual bool is_movable() { return false; }
 		virtual bool is_moving() { return false; }
 		virtual const vector<int>& get_position() const { return position; }
+		virtual bool can_enter() { return true; }
 		// draw
 		static void register_disp();
 		virtual void draw();
@@ -164,6 +169,7 @@ namespace Sokoban
 		virtual bool is_movable() { return false; }
 		virtual bool is_moving() { return false; }
 		virtual const vector<int>& get_position() const { return position; }
+		virtual bool can_enter() { return false; }
 		// draw
 		static void register_disp();
 		virtual void draw();
@@ -180,6 +186,9 @@ namespace Sokoban
 		vector<float> x;
 		vector<float> y;
 		vector<float> z;
+		vector<float> x_r;
+		vector<float> y_r;
+		vector<float> z_r;
 		float cube_len;
 
 		// game parameters
@@ -192,8 +201,9 @@ namespace Sokoban
 
 		// setters and getters
 		const vector<float> real_position(const vector<float>& position) const;
-		void set_object(Object* object, int x, int y, int z);
-		Object* get_object(int x, int y, int z) const;
+		const vector<float> map_position(const vector<float>& position) const;
+		void set_object(Object* object, int x, int y, int z = 0);
+		Object* get_object(int x, int y, int z = 0) const;
 		float get_cube_len() const { return cube_len; }
 
 		// load map

@@ -130,7 +130,7 @@ namespace Sokoban {
 		cout << map_p << endl;
 		cout << floor(map_p[0]) << " " << floor(map_p[1]) << endl;
 		cout << end_cube << endl;
-		if (map.get_object(end_cube[0], end_cube[1])) {
+		if (map.get_object(end_cube[0], end_cube[1]) && !map.get_object(end_cube[0], end_cube[1])->can_enter()) {
 			if (floor(map_p[0]) != end_cube[0]) {
 				map_d[0] = 0;
 			}

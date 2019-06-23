@@ -22,7 +22,13 @@
     <ClCompile Include="src\bmp.cpp" />
     <ClCompile Include="src\control\control.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\model\complete.cpp" />
+    <ClCompile Include="src\model\dst.cpp" />
+    <ClCompile Include="src\model\empty.cpp" />
+    <ClCompile Include="src\model\map.cpp" />
     <ClCompile Include="src\model\model.cpp" />
+    <ClCompile Include="src\model\solidcube.cpp" />
+    <ClCompile Include="src\model\wall.cpp" />
     <ClCompile Include="src\view\view.cpp" />
   </ItemGroup>
   <ItemGroup>

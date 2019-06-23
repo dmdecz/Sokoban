@@ -17,9 +17,14 @@ Map::Map(int x_size, int y_size, int z_size) : size({ x_size, y_size, z_size })
 	}
 
 	o = { 0, 0, 0 };
+	
 	x = { 1, 0, 0 };
-	y = { 0, 0, 1 };
-	z = { 0, -1, 0 };
+	y = { 0, 0, -1 };
+	z = { 0, 1, 0 };
+
+	x_r = { 1, 0, 0 };
+	y_r = { 0, 0, 1 };
+	z_r = { 0, -1, 0 };
 
 	dstNum = 0;
 	completeNum = 0;
@@ -51,6 +56,16 @@ const vector<float> Map::real_position(const vector<float>& position) const
 	return ret;
 }
 
+const vector<float> Map::map_position(const vector<float>& position) const
+{
+	assert(position.size() == 3);
+	vector<float> ret(3);
+	ret[0] = o[0] + position[0] * x_r[0] + position[1] * y_r[0] + position[2] * z_r[0];
+	ret[1] = o[1] + position[0] * x_r[1] + position[1] * y_r[1] + position[2] * z_r[1];
+	ret[2] = o[2] + position[0] * x_r[2] + position[1] * y_r[2] + position[2] * z_r[2];
+	return ret;
+}
+
 void Map::set_object(Object* object, int x, int y, int z)
 {
 	assert(x < size[0] && x >= 0);
@@ -61,16 +76,24 @@ void Map::set_object(Object* object, int x, int y, int z)
 
 Object* Map::get_object(int x, int y, int z) const
 {
-	return map_data[z][y][x];
+	bool x_cond = x < size[0] && x >= 0;
+	bool y_cond = y < size[1] && y >= 0;
+	bool z_cond = z < size[2] && z >= 0;
+	if (x_cond && y_cond && z_cond) {
+		return map_data[z][y][x];
+	} else {
+		return nullptr;
+	}
+	
 }
 
 void Map::draw() const
 {
 	glPushMatrix();
 	float matrix[] = {
-		x[0], y[0], z[0], o[0],
-		x[1], y[1], z[1], o[1],
-		x[2], y[2], z[2], o[2],
+		x_r[0], y_r[0], z_r[0], o[0],
+		x_r[1], y_r[1], z_r[1], o[1],
+		x_r[2], y_r[2], z_r[2], o[2],
 		0, 0, 0, 1
 	};
 	glMultMatrixf(matrix);
