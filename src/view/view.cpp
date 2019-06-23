@@ -34,11 +34,18 @@ namespace Sokoban
 		vector<float> light_position = eye;
 		light_position.push_back(1);
 		glLightfv(GL_LIGHT0, GL_POSITION, light_position.data());
+		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direction.data());
+		glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 10.0);
 		glLightfv(GL_LIGHT0, GL_AMBIENT, vector<float>{1, 1, 1, 1}.data());
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, vector<float>{1, 1, 1, 1}.data());
+		glLightfv(GL_LIGHT0, GL_SPECULAR, vector<float>{1, 1, 1, 1}.data());
 		glEnable(GL_LIGHT0);
 
-		// draw floor
-		//map.drawFloor();
+		//glLightfv(GL_LIGHT1, GL_POSITION, light_position.data());
+		//glLightfv(GL_LIGHT1, GL_AMBIENT, vector<float>{1, 1, 1, 1}.data());
+		//glLightfv(GL_LIGHT1, GL_DIFFUSE, vector<float>{1, 1, 1, 1}.data());
+		//glLightfv(GL_LIGHT1, GL_SPECULAR, vector<float>{1, 1, 1, 1}.data());
+		//glEnable(GL_LIGHT1);
 
 		// draw objects
 		map.draw();

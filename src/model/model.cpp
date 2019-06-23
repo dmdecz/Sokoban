@@ -79,6 +79,15 @@ namespace Sokoban {
 	void SolidCube::draw()
 	{
 		glMatrixMode(GL_MODELVIEW);
+
+		float ambient[]	= { 0.2f, 0.0f, 0.0f, 1.0f };
+		float specular[]= { 1.0f, 0.0f, 0.0f, 1.0f };
+		float diffuse[]	= { 1.0f, 0.0f, 0.0f, 1.0f };
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+
 		glPushMatrix();
 		glTranslatef(position[0] - move[0], position[1] - move[1], position[2] - move[2]);
 		move_once();
@@ -112,7 +121,7 @@ namespace Sokoban {
 			for (int i = 0; i < 6; i++)
 				for (int j = 0; j < 4; j++)
 				{
-					//glTexCoord2iv(borderPoint[j]);
+					glTexCoord2iv(borderPoint[j]);
 					glNormal3fv(normal[i]);
 					glVertex3fv(cubeVertex[i][j]);
 				}
