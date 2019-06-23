@@ -6,14 +6,10 @@
 
 namespace Sokoban
 {
-	void init_texture()
+
+	void init_view_paras()
 	{
-		glGenTextures(texture_count, textures.data());
-		// init texture for each image
-		for (int i = 0; i< texture_count; i++)
-		{
-			texture_images[i]->initTexture(textures[i]);
-		}
+
 	}
 
 	void display()
@@ -41,11 +37,12 @@ namespace Sokoban
 		glLightfv(GL_LIGHT0, GL_SPECULAR, vector<float>{1, 1, 1, 1}.data());
 		glEnable(GL_LIGHT0);
 
-		//glLightfv(GL_LIGHT1, GL_POSITION, light_position.data());
-		//glLightfv(GL_LIGHT1, GL_AMBIENT, vector<float>{1, 1, 1, 1}.data());
-		//glLightfv(GL_LIGHT1, GL_DIFFUSE, vector<float>{1, 1, 1, 1}.data());
-		//glLightfv(GL_LIGHT1, GL_SPECULAR, vector<float>{1, 1, 1, 1}.data());
-		//glEnable(GL_LIGHT1);
+
+		glLightfv(GL_LIGHT1, GL_POSITION, light_position.data());
+		glLightfv(GL_LIGHT1, GL_AMBIENT, vector<float>{1, 1, 1, 1}.data());
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, vector<float>{1, 1, 1, 1}.data());
+		glLightfv(GL_LIGHT1, GL_SPECULAR, vector<float>{1, 1, 1, 1}.data());
+		glEnable(GL_LIGHT1);
 
 		// draw objects
 		map.draw();
@@ -91,10 +88,13 @@ namespace Sokoban
 
 	void reshape(int width, int height)
 	{
+		cout << width << 'x' << height << endl;
+		cout << window_size << endl;
 		if (height == 0)
 			height = 1;
 		window_size[0] = width;
 		window_size[1] = height;
+		cout << window_size << endl;
 		update_view(width, height);
 	}
 

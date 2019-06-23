@@ -9,8 +9,6 @@ using namespace std;
 namespace Sokoban
 {
 
-	void init_texture();
-
 	void display();
 	void display_bitmap();
 

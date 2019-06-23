@@ -26,8 +26,17 @@ namespace Sokoban
 	extern vector<GLuint> textures;
 	extern vector<bmpImage*> texture_images;
 
+	// init each
 	void init_map();
+	void init_texture();
+	void init_display_list();
 
+	// init all paras
+	void init_paras();
+	void init_ctrl_paras();
+	void init_model_paras();
+	void init_view_paras();
+	
 	template <class T>
 	const vector<T> operator+(const vector<T>& v1, const vector<T>& v2)
 	{
@@ -79,7 +88,12 @@ namespace Sokoban
 	{
 	public:
 		virtual void bind_map(Map *map) = 0;
+
+		// draw function for init display list
+		static void register_displayList() {}
+		// draw function for actual paint
 		virtual void draw() = 0;
+
 		virtual bool is_movable() = 0;
 		virtual void move_to(vector<int> end) = 0;
 		virtual bool is_moving() = 0;
@@ -114,6 +128,7 @@ namespace Sokoban
 		}
 		virtual ~SolidCube() = default;
 		virtual void bind_map(Map *map) { this->map = map; }
+		static void register_disp();
 		virtual void draw();
 		virtual bool is_movable() { return true; }
 		virtual bool is_moving()
@@ -216,7 +231,7 @@ namespace Sokoban
 			}
 			delete[] map_data;
 		}
-
+		static void register_disp_floor();
 		void drawFloor() const;
 		float get_cube_len() const
 		{
