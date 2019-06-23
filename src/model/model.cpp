@@ -13,20 +13,18 @@ namespace Sokoban {
 	float zoomAngle;
 
 	// textures
-	const int texture_count = 1;
-	enum TextureID {
-		BOX
-	};
+	const int texture_count = 5;
 	vector<GLuint> textures(texture_count);
 	vector<bmpImage*> texture_images({
-		new bmpImage("res/Crack.bmp"),
+		new bmpImage("res/solidcube.bmp"),
+		new bmpImage("res/floor.bmp"),
+		new bmpImage("res/wall.bmp"),
+		new bmpImage("res/dst.bmp"),
+		new bmpImage("res/complete.bmp"),
 	});
 
 	// display list
-	const int display_count = 2;
-	enum DisplayID {
-		BOX_Disp, Floor_Disp
-	};
+	const int display_count = 5;
 	vector<GLuint> display_list(display_count);
 
 	void init_paras()
@@ -52,14 +50,7 @@ namespace Sokoban {
 
 	void init_map()
 	{
-		//for (int i = 0; i < 10; i++)
-		//{
-		//	for (int j = 0; j < 10; j++)
-		//	{
-		//		map[i][j] = new SolidCube(map, {i, 0, -j});
-		//		object_list.push_back(map[i][j]);
-		//	}
-		//}
+		Sokoban::map.load(Map::FilePrefix + string("0"));
 	}
 
 	void init_texture()
@@ -88,144 +79,21 @@ namespace Sokoban {
 		glNewList(display_list[Floor_Disp], GL_COMPILE);
 			Map::register_disp_floor();
 		glEndList();
-	}
 
-	void Map::register_disp_floor()
-	{
-		float half = Sokoban::map.cube_len / 2;
-		glPushMatrix();
-		glTranslatef(0, 0, -half);
+		// wall
+		glNewList(display_list[Wall_Disp], GL_COMPILE);
+			WallCube::register_disp();
+		glEndList();
 
-		// enable texture
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, textures[TextureID::BOX]);
-		// set texture coordinary
-		GLint borderPoint[4][2] = {
-			{1, 1}, {1, 0}, {0, 0}, {0, 1}
-		};
-		
-		// set real position vertex
-		GLfloat Vertex[4][3] = {
-			{ half,  half, 0}, { half, -half, 0}, {-half, -half, 0}, {-half,  half, 0}
-		};
-		GLfloat normal[3] = { 0, 0, 1 };
+		// dst
+		glNewList(display_list[DST_Disp], GL_COMPILE);
+			DstCube::register_disp();
+		glEndList();
 
-		glBegin(GL_QUADS);
-		for (int k = 0; k < 4; k++)
-		{
-			glTexCoord2iv(borderPoint[k]);
-			glNormal3fv(normal);
-			glVertex3fv(Vertex[k]);
-		}
-		glEnd();
-
-		// disable texture
-		glDisable(GL_TEXTURE_2D);
-
-		glPopMatrix();
-	}
-
-	void Map::drawFloor() const
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		
-		for(int i = 0; i < size[1]; i++)
-			for (int j = 0; j < size[0]; j++)
-			{
-				glPushMatrix();
-				glTranslatef(j, i, 0);
-
-				glCallList(Sokoban::display_list[Floor_Disp]);
-
-				glPopMatrix();
-			}
-
-		glPopMatrix();
-	}
-
-	void SolidCube::move_to(vector<int> end)
-	{
-		if (moving)
-			return;
-		assert(end.size() == 3);
-		map->set_object(nullptr, position[0], position[1], 0);
-		move[0] = (end[0] - position[0]) * 1.0;
-		move[1] = (end[1] - position[1]) * 1.0;
-		move[2] = (end[2] - position[2]) * 1.0;
-		position = end;
-		map->set_object(this, position[0], position[1], 0);
-		moving = true;
-	}
-
-	void SolidCube::register_disp()
-	{
-		glMatrixMode(GL_MODELVIEW);
-
-		float ambient[]	= { 0.2f, 0.0f, 0.0f, 1.0f };
-		float specular[]= { 1.0f, 0.0f, 0.0f, 1.0f };
-		float diffuse[]	= { 1.0f, 0.0f, 0.0f, 1.0f };
-
-		glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-
-		glPushMatrix();
-
-		// enable texture
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, textures[TextureID::BOX]);
-		// set texture coordinary for every surface
-		GLint borderPoint[4][2] = {
-			{1, 1}, {1, 0}, {0, 0}, {0, 1}
-		};
-		GLfloat half = Sokoban::map.get_cube_len() / 4;
-		GLfloat cubeVertex[6][4][3] = {
-			{ { half,  half,  half}, {-half,  half,  half}, {-half, -half,  half}, { half, -half,  half} },
-			{ { half,  half, -half}, { half, -half, -half}, {-half, -half, -half}, {-half,  half, -half} },
-			{ {-half, -half,  half}, {-half, -half, -half}, {-half,  half, -half}, {-half,  half,  half} },
-			{ { half,  half,  half}, { half, -half,  half}, { half, -half, -half}, { half,  half, -half} },
-			{ { half, -half,  half}, { half, -half, -half}, {-half, -half, -half}, {-half, -half,  half} },
-			{ {-half,  half,  half}, { half,  half,  half}, { half,  half, -half}, {-half,  half, -half} }
-		};
-		GLfloat normal[6][3] = {
-			{ 0,  0,  1},
-			{ 0,  0, -1},
-			{-1,  0,  0},
-			{ 1,  0,  0},
-			{ 0, -1,  0},
-			{ 0,  1,  0}
-		};
-		glPushMatrix();
-
-		glBegin(GL_QUADS);
-		for (int i = 0; i < 6; i++)
-			for (int j = 0; j < 4; j++)
-			{
-				//glTexCoord2iv(borderPoint[j]);
-				glNormal3fv(normal[i]);
-				glVertex3fv(cubeVertex[i][j]);
-			}
-		glEnd();
-
-		glPopMatrix();
-
-		// disable texture
-		glDisable(GL_TEXTURE_2D);
-
-		glPopMatrix();
-	}
-
-	void SolidCube::draw()
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glTranslatef(position[0] - move[0], position[1] - move[1], position[2] - move[2]);
-		move_once();
-
-		glCallList(Sokoban::display_list[BOX_Disp]);
-
-		glPopMatrix();
+		// complete
+		glNewList(display_list[Complete_Disp], GL_COMPILE);
+			CompleteCube::register_disp();
+		glEndList();
 	}
 
 	void screen_shot()
