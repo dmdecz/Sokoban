@@ -1,8 +1,20 @@
 #pragma once
 
-void sokoban_display();
+#include "../bmp.h"
+#include "../glut.h"
 
-void sokoban_reshape(int width, int height);
-void sokoban_update_view(int width, int height);
+#include <vector>
+using namespace std;
 
-void sokoban_idle();
+namespace Sokoban
+{
+
+	void display();
+	void display_bitmap();
+
+	void reshape(int width, int height);
+	void update_view(int width, int height);
+
+	void idle();
+	double getFPS();
+}

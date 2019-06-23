@@ -1,28 +1,51 @@
 #include "view/view.h"
-#include "view/glut.h"
+#include "model/model.h"
+#include "control/control.h"
+#include "glut.h"
+#include "windows.h"
 
 #include <iostream>
 
-void Sokoban(int *argc, char** argv);
+namespace Sokoban
+{
+	void Sokoban(int *argc, char **argv);
+}
 
 int main(int argc, char **argv)
 {
-	std::cout << "Hello World!" << std::endl;
-	Sokoban(&argc, argv);
+	ShowCursor(false);
+	Sokoban::Sokoban(&argc, argv);
 }
 
-void Sokoban(int *argc, char** argv)
+void Sokoban::Sokoban(int *argc, char** argv)
 {
+	// glut init
 	glutInit(argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-	glutInitWindowSize(480, 480);
 
-	int window_handle = glutCreateWindow("Sokoban");
+	// init paras
+	Sokoban::init_paras();
+	cout << window_size << endl;
 
-	glutDisplayFunc(sokoban_display);
-	glutReshapeFunc(sokoban_reshape);
-	//glutKeyboardFunc();
-	glutIdleFunc(sokoban_idle);
+	// init window
+	glutInitWindowSize(Sokoban::window_size[0], Sokoban::window_size[1]);
+	Sokoban::windowHandle = glutCreateWindow("Sokoban");
 
+	// init map and texture
+	Sokoban::init_texture();
+	Sokoban::init_map();
+	Sokoban::init_display_list();
+
+	// register events
+	glutDisplayFunc(Sokoban::display);
+	glutReshapeFunc(Sokoban::reshape);
+	glutWarpPointer(Sokoban::window_size[0] / 2, Sokoban::window_size[1] / 2);
+	glutMouseFunc(Sokoban::mouseClick);
+	glutMotionFunc(Sokoban::mouseMotion);
+	glutPassiveMotionFunc(Sokoban::mouseMotion);
+	glutKeyboardFunc(Sokoban::keyboard);
+	glutIdleFunc(idle);
+
+	// begin main loop
 	glutMainLoop();
 }

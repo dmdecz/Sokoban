@@ -45,11 +45,29 @@
     <ClCompile Include="src\control\control.cpp">
       <Filter>源文件\control</Filter>
     </ClCompile>
+    <ClCompile Include="src\bmp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\wall.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\solidcube.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\map.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\empty.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\dst.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\complete.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\view\glut.h">
-      <Filter>头文件\view</Filter>
-    </ClInclude>
     <ClInclude Include="src\view\view.h">
       <Filter>头文件\view</Filter>
     </ClInclude>
@@ -58,6 +76,12 @@
     </ClInclude>
     <ClInclude Include="src\control\control.h">
       <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glut.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bmp.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
