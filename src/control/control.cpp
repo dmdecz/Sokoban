@@ -9,9 +9,22 @@ namespace Sokoban {
 
 	int lastmouseX;
 	int lastmouseY;
-	float speed = 0.05f;
-	float yaw = 270.0f, pitch = 0.0f;
-	bool mouseAdjust = false;
+	float speed;
+	float yaw , pitch;
+	bool mouseAdjust;
+
+	void init_ctrl_paras()
+	{
+		lastmouseX = 0;
+		lastmouseY = 0;
+
+		speed = 0.05f;
+
+		yaw = 270.0f;
+		pitch = 0.0f;
+
+		mouseAdjust = false;
+	}
 
 	void keyboard(unsigned char key, int  x, int y)
 	{
