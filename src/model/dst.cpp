@@ -21,9 +21,14 @@ void DstCube::register_disp()
 
 	glPushMatrix();
 
+	glDepthMask(GL_FALSE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	// enable texture
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textures[TextureID::DST]);
+
 	// set texture coordinary for every surface
 	GLint borderPoint[4][2] = {
 		{1, 1}, {1, 0}, {0, 0}, {0, 1}
@@ -63,6 +68,8 @@ void DstCube::register_disp()
 
 	// disable texture
 	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
+	glDepthMask(GL_TRUE);
 
 	glPopMatrix();
 }

@@ -52,11 +52,13 @@ namespace Sokoban {
 
 	void init_map()
 	{
-		Sokoban::map.load(Map::FilePrefix + string("0"));
+		Sokoban::map.reload();
 	}
 
 	void init_texture()
 	{
+		texture_images[DST]->setTransparent(127);
+
 		glGenTextures(texture_count, textures.data());
 		// init texture for each image
 		for (int i = 0; i < texture_count; i++)

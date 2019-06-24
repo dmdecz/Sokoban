@@ -37,11 +37,11 @@ namespace Sokoban
 		glEnable(GL_LIGHT0);
 
 
-		glLightfv(GL_LIGHT1, GL_POSITION, light_position.data());
+		/*glLightfv(GL_LIGHT1, GL_POSITION, light_position.data());
 		glLightfv(GL_LIGHT1, GL_AMBIENT, vector<float>{1, 1, 1, 1}.data());
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, vector<float>{1, 1, 1, 1}.data());
 		glLightfv(GL_LIGHT1, GL_SPECULAR, vector<float>{1, 1, 1, 1}.data());
-		glEnable(GL_LIGHT1);
+		glEnable(GL_LIGHT1);*/
 
 		// draw objects
 		map.draw();

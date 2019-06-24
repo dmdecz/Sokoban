@@ -77,6 +77,7 @@ namespace Sokoban {
 		}
 		case '\r': {
 			init_paras();
+			Sokoban::map.reload();
 		}
 		default:
 			break;
@@ -174,6 +175,7 @@ namespace Sokoban {
 		vector<float> map_d = map.map_position(direction);
 		float end_x = map_p[0] + map_d[0];
 		float end_y = map_p[1] + map_d[1];
+
 		vector<int> end_cube_x = { int(end_x), int(floor(map_p[1])) };
 		vector<int> end_cube_y = { int(floor(map_p[0])), int(end_y) };
 		cout << end_cube_x << endl;
