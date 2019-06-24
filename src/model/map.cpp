@@ -3,7 +3,7 @@
 #include <fstream>
 using namespace Sokoban;
 
-Map::Map(int x_size, int y_size, int z_size) : size({ 0, 0, 0 })
+Map::Map() : size({ 0, 0, 0 })
 {
 	cube_len = 1;
 	map_data = nullptr;

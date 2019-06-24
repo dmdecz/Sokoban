@@ -213,7 +213,7 @@ namespace Sokoban
 		int step_number;
 
 	public:
-		Map(int x_size, int y_size, int z_size = 1);
+		Map();
 		~Map();
 
 		// setters and getters
