@@ -53,7 +53,6 @@ namespace Sokoban {
 
 		zoomAngle = 45.0f;
 
-		light_mode = true;
 	}
 
 	void init_map()
