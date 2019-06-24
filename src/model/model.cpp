@@ -48,12 +48,11 @@ namespace Sokoban {
 		direction = { 0, 0, -1 };
 		up = { 0, 1, 0 };
 
-		window_size = { 640, 640 };
+		window_size = { 960, 960 };
 		windowHandle = 0;
 
-		zoomAngle = 45.0f;
+		zoomAngle = 60.0f;
 
-		light_mode = true;
 	}
 
 	void init_map()

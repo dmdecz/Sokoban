@@ -8,7 +8,8 @@ namespace Sokoban
 {
 	void init_view_paras()
 	{
-		
+		light_mode = true;
+		sleep_cnt = 0;
 	}
 
 	void display()
