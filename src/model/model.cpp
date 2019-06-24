@@ -11,9 +11,10 @@ namespace Sokoban {
 	vector<int> window_size;
 	int windowHandle;
 	float zoomAngle;
+	float eye_h;
 
 	// textures
-	const int texture_count = 5;
+	const int texture_count = 7;
 	vector<GLuint> textures(texture_count);
 	vector<bmpImage*> texture_images({
 		new bmpImage("res/solidcube.bmp"),
@@ -21,11 +22,17 @@ namespace Sokoban {
 		new bmpImage("res/wall.bmp"),
 		new bmpImage("res/dst.bmp"),
 		new bmpImage("res/complete.bmp"),
+		new bmpImage("res/sky.bmp"),
+		new bmpImage("res/border.bmp")
 	});
 
 	// display list
 	const int display_count = 5;
 	vector<GLuint> display_list(display_count);
+
+	// view
+	bool light_mode;
+	int sleep_cnt;
 
 	void init_paras()
 	{
@@ -36,9 +43,8 @@ namespace Sokoban {
 
 	void init_model_paras()
 	{
-		//map = Map(1, 10);
-
-		eye = { 0.0f, 0.0f, 10.0f };
+		eye_h = 0.8;
+		eye = Sokoban::map.real_position({ 0, 0, eye_h });
 		direction = { 0, 0, -1 };
 		up = { 0, 1, 0 };
 
@@ -46,15 +52,19 @@ namespace Sokoban {
 		windowHandle = 0;
 
 		zoomAngle = 45.0f;
+
+		light_mode = true;
 	}
 
 	void init_map()
 	{
-		Sokoban::map.load(Map::FilePrefix + string("0"));
+		Sokoban::map.reload();
 	}
 
 	void init_texture()
 	{
+		texture_images[DST]->setTransparent(127);
+
 		glGenTextures(texture_count, textures.data());
 		// init texture for each image
 		for (int i = 0; i < texture_count; i++)
@@ -92,7 +102,7 @@ namespace Sokoban {
 
 		// complete
 		glNewList(display_list[Complete_Disp], GL_COMPILE);
-			CompleteCube::register_disp();
+			//CompleteCube::register_disp();
 		glEndList();
 	}
 

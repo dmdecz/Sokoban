@@ -1,10 +1,11 @@
 #include "control.h"
 #include "../model/model.h"
 #include "../bmp.h"
-#include "../glut.h"
-#include "..//view/view.h"
+
+#include "../view/view.h"
 
 #include <iostream>
+#include <windows.h>
 
 namespace Sokoban {
 
@@ -31,20 +32,19 @@ namespace Sokoban {
 	{
 		switch (key)
 		{
-		//case 'a':
-		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() - vector<int>{1, 0, 0});
-		//	break;
-		//case 'd':
-		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() + vector<int>{1, 0, 0});
-		//	break;
-		//case 'w':
-		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() + vector<int>{0, 1, 0});
-		//	break;
-		//case 's':
-		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() - vector<int>{0, 1, 0});
-		//	break;
+		case 'l': {
+			light_mode = !light_mode;
+		}
 		case ' ': {
 			screen_shot();
+			break;
+		}
+		case 'q': {
+			map.to_prev_map();
+			break;
+		}
+		case 'e': {
+			map.to_next_map();
 			break;
 		}
 		case 'a': {
@@ -65,11 +65,13 @@ namespace Sokoban {
 		case 'z': {
 			zoomAngle += 2.0f;
 			if (zoomAngle > 60.0f) zoomAngle = 60.0f;
+			reshape(window_size[0], window_size[1]);
 			break;
 		}
 		case 'c': {
 			zoomAngle -= 2.0f;
 			if (zoomAngle < 15.0f) zoomAngle = 15.0f;
+			reshape(window_size[0], window_size[1]);
 			break;
 		}
 		case 27: {
@@ -77,6 +79,7 @@ namespace Sokoban {
 		}
 		case '\r': {
 			init_paras();
+			Sokoban::map.reload();
 		}
 		default:
 			break;
@@ -106,7 +109,7 @@ namespace Sokoban {
 			glPopMatrix();
 			glFlush();
 			hits = glRenderMode(GL_RENDER);
-			std::cout << "hits " << hits << std::endl;
+			//std::cout << "hits " << hits << std::endl;
 			glMatrixMode(GL_MODELVIEW);
 			glutPostRedisplay();
 			reshape(window_size[0], window_size[1]);
@@ -114,24 +117,29 @@ namespace Sokoban {
 			if (hits == 0) return;
 			unsigned int i;
 			GLuint name, minz, maxz, min, minName;
+			bool flag = false;
 			for (i = 0; i < hits; i++)
 			{
 				minz = selectBuffer[1 + i * 4];
 				maxz = selectBuffer[2 + i * 4];
 				name = selectBuffer[3 + i * 4];
-				if (i == 0) {
+				if (!flag) {
 					min = minz;
 					minName = name;
-				}
-				else {
-					if (minz < min) {
+					flag = true;
+					if (name == 10000) {
+						flag = false;
+					}
+				} else {
+					if (minz < min && name < map.get_size()[1] * map.get_size()[0] * 6) {
 						min = minz;
 						minName = name;
 					}
 				}
-				std::cout << "name" << name << "minz" << minz << "maxz" << maxz << std::endl;
+				//std::cout << "name" << name << "minz" << minz << "maxz" << maxz << std::endl;
 			}
-			std::cout << "result" << minName << std::endl;
+			//std::cout << "result " << minName << std::endl;
+			box_move(minName);
 		}
 	}
 
@@ -169,18 +177,70 @@ namespace Sokoban {
 		vector<float> map_d = map.map_position(direction);
 		float end_x = map_p[0] + map_d[0];
 		float end_y = map_p[1] + map_d[1];
+
 		vector<int> end_cube_x = { int(end_x), int(floor(map_p[1])) };
 		vector<int> end_cube_y = { int(floor(map_p[0])), int(end_y) };
+		cout << end_cube_x << endl;
+		cout << end_cube_y << endl;
 
 		Object* cube_x = map.get_object(end_cube_x[0], end_cube_x[1]);
-		if (cube_x && !cube_x->can_enter() && end_cube_x[0] != floor(map_p[0])) {
+		if (!cube_x || !cube_x->can_enter() && end_cube_x[0] != floor(map_p[0])) {
 			map_d[0] = 0;
 		}
 		Object* cube_y = map.get_object(end_cube_y[0], end_cube_y[1]);
-		if (cube_y && !cube_y->can_enter() && end_cube_y[1] != floor(map_p[1])) {
+		if (!cube_y || !cube_y->can_enter() && end_cube_y[1] != floor(map_p[1])) {
 			map_d[1] = 0;
 		}
 		direction = map.real_position(map_d);
 		eye = eye + direction * speed;
+	}
+
+	void box_move(GLuint name)
+	{
+		int face = name % 6;
+		int x = (name / 6) % map.get_size()[0];
+		int y = (name / 6) / map.get_size()[0];
+		cout << "[" << x << "]" << "[" << y << "]" << " " << face << endl;
+		Object* move_cube = map.get_object(x, y);
+		if (!move_cube || !move_cube->is_movable()) {
+			return;
+		}
+		Object* end_cube = nullptr;
+		vector<int> end_p = { -1, -1, 0 };
+		if (face == 2) {
+			end_p = { x + 1, y, 0 };
+		} else if (face == 3) {
+			end_p = { x - 1, y, 0 };
+		} else if (face == 4) {
+			end_p = { x, y + 1, 0 };
+		} else if (face == 5) {
+			end_p = { x, y - 1, 0 };
+		}
+		end_cube = map.get_object(end_p[0], end_p[1]);
+		if (end_cube && end_cube->can_enter()) {
+			ObjectID move_id = move_cube->getID();
+			ObjectID end_id = end_cube->getID();
+			if (move_id == CUBE_ID && end_id == DST_ID) {
+				delete map.get_object(x, y);
+				delete map.get_object(end_p[0], end_p[1]);
+				map.set_object(new CompleteCube({x, y, 0}), x, y);
+				map.set_object(new EmptyCube(end_p), end_p[0], end_p[1]);
+				move_cube = map.get_object(x, y);
+				map.add_complete();
+			} else if (move_id == COMPLETE_ID && end_id == EMPTY_ID) {
+				delete map.get_object(x, y);
+				delete map.get_object(end_p[0], end_p[1]);
+				map.set_object(new SolidCube({ x, y, 0 }), x, y);
+				map.set_object(new DstCube(end_p), end_p[0], end_p[1]);
+				move_cube = map.get_object(x, y);
+				map.sub_complete();
+			}
+			
+			move_cube->move_to(end_p[0], end_p[1]);
+			map.add_step();
+			if (map.win()) {
+				sleep_cnt = 1;
+			}
+		}
 	}
 }

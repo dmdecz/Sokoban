@@ -13,7 +13,7 @@ void WallCube::register_disp()
 
 	float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	float specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float diffuse[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
@@ -28,7 +28,7 @@ void WallCube::register_disp()
 	GLint borderPoint[4][2] = {
 		{1, 1}, {1, 0}, {0, 0}, {0, 1}
 	};
-	GLfloat half = Sokoban::map.get_cube_len() / 4;
+	GLfloat half = Sokoban::map.get_cube_len() / 2;
 	GLfloat cubeVertex[6][4][3] = {
 		{ { half,  half,  half}, {-half,  half,  half}, {-half, -half,  half}, { half, -half,  half} },
 		{ { half,  half, -half}, { half, -half, -half}, {-half, -half, -half}, {-half,  half, -half} },
@@ -47,14 +47,16 @@ void WallCube::register_disp()
 	};
 	glPushMatrix();
 
+	glLoadName(10000);
 	glBegin(GL_QUADS);
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 4; j++)
 		{
 			glTexCoord2iv(borderPoint[j]);
 			glNormal3fv(normal[i]);
 			glVertex3fv(cubeVertex[i][j]);
 		}
+	}
 	glEnd();
 
 	glPopMatrix();
