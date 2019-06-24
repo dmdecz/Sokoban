@@ -95,29 +95,6 @@ Object* Map::get_object(int x, int y, int z) const
 	
 }
 
-void Map::draw() const
-{
-	glPushMatrix();
-	float matrix[] = {
-		x_r[0], y_r[0], z_r[0], o[0],
-		x_r[1], y_r[1], z_r[1], o[1],
-		x_r[2], y_r[2], z_r[2], o[2],
-		0, 0, 0, 1
-	};
-	glMultMatrixf(matrix);
-	drawFloor();
-	for (int i = 0; i < size[0]; i++) {
-		for (int j = 0; j < size[1]; j++) {
-			for (int k = 0; k < size[2]; k++) {
-				if (map.get_object(i, j, k)) {
-					map.get_object(i, j, k)->draw();
-				}
-			}
-		}
-	}
-	glPopMatrix();
-}
-
 void Map::register_disp_floor()
 {
 	float half = Sokoban::map.cube_len / 2;
@@ -161,9 +138,36 @@ void Map::register_disp_floor()
 	glPopMatrix();
 }
 
+void Map::draw() const
+{
+	glPushMatrix();
+	float matrix[] = {
+		x_r[0], y_r[0], z_r[0], o[0],
+		x_r[1], y_r[1], z_r[1], o[1],
+		x_r[2], y_r[2], z_r[2], o[2],
+		0, 0, 0, 1
+	};
+	glMultMatrixf(matrix);
+
+	// draw floor
+	drawFloor();
+	// draw border
+	drawBorder();
+	// draw each grid
+	for (int i = 0; i < size[0]; i++) {
+		for (int j = 0; j < size[1]; j++) {
+			for (int k = 0; k < size[2]; k++) {
+				if (map.get_object(i, j, k)) {
+					map.get_object(i, j, k)->draw();
+				}
+			}
+		}
+	}
+	glPopMatrix();
+}
+
 void Map::drawFloor() const
 {
-	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
 	for (int i = 0; i < size[1]; i++) {
@@ -181,9 +185,76 @@ void Map::drawFloor() const
 	glPopMatrix();
 }
 
+void Map::drawBorder() const
+{
+	glPushMatrix();
+
+	// translate to the bottom
+	float half = cube_len / 2;
+	glTranslatef(-half, -half, -half);
+
+	// enable texture
+	glEnable(GL_TEXTURE_2D);
+	// set texture coordinary
+	GLint textureVertex[4][2] = {
+		{0, 0}, {0, 1}, {1, 1}, {1, 0}
+	};
+
+	GLfloat bound_h = 6;
+	GLfloat bound_w = cube_len * size[0];
+	// border
+	GLfloat Border[4][4][3] = {
+		{ { 0, 0, 0 }, { 0, 0, bound_h }, { 0, bound_w, bound_h }, { 0, bound_w, 0 } },
+		{ { bound_w, 0, 0 }, { bound_w, 0, bound_h }, { 0, 0, bound_h }, { 0, 0, 0 } },
+		{ { 0, bound_w, 0 }, { 0, bound_w, bound_h }, { bound_w, bound_w, bound_h }, { bound_w, bound_w, 0 } },
+		{ { bound_w, bound_w, 0 }, { bound_w, bound_w, bound_h }, { bound_w, 0, bound_h }, { bound_w, 0, 0 } }
+	};
+	GLfloat Border_norm[4][3] = {
+		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, -1, 0 }, { -1, 0, 0 }
+	};
+
+	// upper
+	GLfloat Upper[4][3] = {
+		{ 0, 0, bound_h }, { 0, bound_w, bound_h }, { bound_w, bound_w, bound_h }, { bound_w, 0, bound_h }
+	};
+	GLfloat Upper_norm[3] = {
+		 0, 0, -1
+	};
+	
+	// draw border
+	glBindTexture(GL_TEXTURE_2D, textures[TextureID::Border]);
+	glBegin(GL_QUADS);
+	for (int i = 0; i < 4; i++) 
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			glTexCoord2iv(textureVertex[k]);
+			glNormal3fv(Border_norm[i]);
+			glVertex3fv(Border[i][k]);
+		}
+	}
+	glEnd();
+
+	// draw upper
+	glBindTexture(GL_TEXTURE_2D, textures[TextureID::Sky]);
+	glBegin(GL_QUADS);
+	for (int k = 0; k < 4; k++)
+	{
+		glTexCoord2iv(textureVertex[k]);
+		glNormal3fv(Upper_norm);
+		glVertex3fv(Upper[k]);
+	}
+	glEnd();
+
+	// disable texture
+	glDisable(GL_TEXTURE_2D);
+
+	glPopMatrix();
+}
+
 void Map::load(string filename)
 {
-	ifstream in(filename, ios::binary);
+	ifstream in(filename);
 	if (!in)
 		cout << "fail to load map." << endl;
 
@@ -192,7 +263,7 @@ void Map::load(string filename)
 	for (int i = 0; i < size[1]; i++)
 		for (int j = 0; j < size[0]; j++)
 		{
-			in.read((char*)&buffer, sizeof(int));
+			in >> buffer;
 			ObjectID id = (ObjectID)buffer;
 
 			delete map_data[0][i][j];
@@ -209,18 +280,14 @@ void Map::load(string filename)
 		}
 
 	// read dst number
-	in.read((char*)&buffer, sizeof(int));
-	this->dstNum = buffer;
-	in.read((char*)&buffer, sizeof(int));
-	this->completeNum = buffer;
+	in >> this->dstNum;
+	in >> this->completeNum;
 
 	// read init position
-	in.read((char*)&buffer, sizeof(int));
-	int x = buffer;
-	in.read((char*)&buffer, sizeof(int));
-	int y = buffer;
+	int x, y;
+	in >> x >> y;
 
-	Sokoban::eye = this->real_position({ float(x), float(y), 0});
+	Sokoban::eye = this->real_position({ float(x), float(y), Sokoban::eye_h});
 
 	in.close();
 }
