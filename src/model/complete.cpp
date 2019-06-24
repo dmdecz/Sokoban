@@ -28,7 +28,7 @@ void CompleteCube::register_disp()
 	GLint borderPoint[4][2] = {
 		{1, 1}, {1, 0}, {0, 0}, {0, 1}
 	};
-	GLfloat half = Sokoban::map.get_cube_len() / 4;
+	GLfloat half = Sokoban::map.get_cube_len() / 2;
 	GLfloat cubeVertex[6][4][3] = {
 		{ { half,  half,  half}, {-half,  half,  half}, {-half, -half,  half}, { half, -half,  half} },
 		{ { half,  half, -half}, { half, -half, -half}, {-half, -half, -half}, {-half,  half, -half} },

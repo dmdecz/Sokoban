@@ -19,6 +19,7 @@ namespace Sokoban
 	extern vector<int> window_size;
 	extern int windowHandle;
 	extern float zoomAngle;
+	extern float eye_h;
 
 	// textures
 	extern const int texture_count;
@@ -50,7 +51,7 @@ namespace Sokoban
 	};
 	enum TextureID {
 		BOX, Floor, Wall,
-		DST, Complete
+		DST, Complete, Sky, Border
 	};
 	enum DisplayID {
 		BOX_Disp, Floor_Disp, Wall_Disp,
@@ -213,6 +214,7 @@ namespace Sokoban
 		// draw
 		static void register_disp_floor();
 		void drawFloor() const;
+		void drawBorder() const;
 		void draw() const;
 	};
 
