@@ -47,14 +47,16 @@ void DstCube::register_disp()
 	};
 	glPushMatrix();
 
+	glLoadName(10000);
 	glBegin(GL_QUADS);
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 4; j++)
 		{
 			glTexCoord2iv(borderPoint[j]);
 			glNormal3fv(normal[i]);
 			glVertex3fv(cubeVertex[i][j]);
 		}
+	}
 	glEnd();
 
 	glPopMatrix();

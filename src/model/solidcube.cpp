@@ -1,8 +1,8 @@
 #include "model.h"
 using namespace Sokoban;
 
-SolidCube::SolidCube(const vector<int>& p):
-	Object(CUBE_ID), position(p)
+SolidCube::SolidCube(const vector<int>& p, ObjectID id):
+	Object(id), position(p)
 {
 	move = { 0, 0, 0 };
 }
@@ -19,12 +19,19 @@ void SolidCube::move_once()
 		moving = false;
 }
 
+void SolidCube::move_to(int x, int y, int z)
+{
+	move_to(vector<int>{x, y, z});
+}
+
 void SolidCube::move_to(vector<int> end)
 {
 	if (moving)
 		return;
 	assert(end.size() == 3);
-	Sokoban::map.set_object(nullptr, position[0], position[1], 0);
+	Object* end_cube = map.get_object(end[0], end[1]);
+	end_cube->set_position(position);
+	Sokoban::map.set_object(end_cube, position[0], position[1], 0);
 	move[0] = (end[0] - position[0]) * 1.0;
 	move[1] = (end[1] - position[1]) * 1.0;
 	move[2] = (end[2] - position[2]) * 1.0;

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "../glut.h"
+
 #include <vector>
 #include <math.h>
 
@@ -15,6 +18,8 @@ namespace Sokoban
 	void mouseMotion(int x, int y);
 
 	void player_move(vector<float> direction);
+
+	void box_move(GLuint name);
 
 	template <class T>
 	vector<T> cross(vector<T> v1, vector<T> v2) {
