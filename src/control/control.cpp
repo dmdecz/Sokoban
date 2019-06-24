@@ -176,6 +176,8 @@ namespace Sokoban {
 		float end_y = map_p[1] + map_d[1];
 		vector<int> end_cube_x = { int(end_x), int(floor(map_p[1])) };
 		vector<int> end_cube_y = { int(floor(map_p[0])), int(end_y) };
+		cout << end_cube_x << endl;
+		cout << end_cube_y << endl;
 
 		Object* cube_x = map.get_object(end_cube_x[0], end_cube_x[1]);
 		if (!cube_x || !cube_x->can_enter() && end_cube_x[0] != floor(map_p[0])) {

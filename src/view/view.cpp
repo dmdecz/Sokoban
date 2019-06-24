@@ -30,7 +30,7 @@ namespace Sokoban
 		light_position.push_back(1);
 		glLightfv(GL_LIGHT0, GL_POSITION, light_position.data());
 		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direction.data());
-		glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 10.0);
+		glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 30.0);
 		glLightfv(GL_LIGHT0, GL_AMBIENT, vector<float>{1, 1, 1, 1}.data());
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, vector<float>{1, 1, 1, 1}.data());
 		glLightfv(GL_LIGHT0, GL_SPECULAR, vector<float>{1, 1, 1, 1}.data());
