@@ -44,9 +44,9 @@ void SolidCube::draw_directly()
 {
 	glMatrixMode(GL_MODELVIEW);
 
-	float ambient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	float specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float diffuse[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specular);

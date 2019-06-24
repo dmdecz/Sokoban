@@ -3,19 +3,10 @@
 #include <fstream>
 using namespace Sokoban;
 
-Map::Map(int x_size, int y_size, int z_size) : size({ x_size, y_size, z_size })
+Map::Map(int x_size, int y_size, int z_size) : size({ 0, 0, 0 })
 {
 	cube_len = 1;
-	map_data = new Object***[size[2]];
-	for (int i = 0; i < size[2]; i++) {
-		map_data[i] = new Object * *[size[1]];
-		for (int j = 0; j < size[1]; j++) {
-			map_data[i][j] = new Object *[size[0]];
-			for (int k = 0; k < size[0]; k++) {
-				map_data[i][j][k] = new EmptyCube({ k, j, i });
-			}
-		}
-	}
+	map_data = nullptr;
 
 	o = { 0, 0, 0 };
 	
@@ -27,14 +18,6 @@ Map::Map(int x_size, int y_size, int z_size) : size({ x_size, y_size, z_size })
 	y_r = { 0, 0, 1 };
 	z_r = { 0, -1, 0 };
 
-	//x = { 1, 0, 0 };
-	//y = { 0, 1, 0 };
-	//z = { 0, 0, 1 };
-
-	//x_r = { 1, 0, 0 };
-	//y_r = { 0, 1, 0 };
-	//z_r = { 0, 0, 1 };
-
 	dstNum = 0;
 	completeNum = 0;
 	map_No = 0;
@@ -42,23 +25,7 @@ Map::Map(int x_size, int y_size, int z_size) : size({ x_size, y_size, z_size })
 
 Map::~Map()
 {
-	cout << "~Map" << endl;
-	for (int i = 0; i < size[2]; i++) {
-		for (int j = 0; j < size[1]; j++) {
-			for (int k = 0; k < size[0]; k++) {
-				if (map_data[i][j][k]) {
-					delete map_data[i][j][k];
-				}
-				cout << "free " << k << j << i << endl;
-			}
-			delete[] map_data[i][j];
-			cout << "free " << j << i << endl;
-		}
-		delete[] map_data[i];
-		cout << "free " << i << endl;
-	}
-	delete[] map_data;
-	cout << "~Map" << endl;
+	map_data_free();
 }
 
 const vector<float> Map::real_position(const vector<float>& position) const
@@ -225,13 +192,14 @@ void Map::drawBorder() const
 	};
 
 	GLfloat bound_h = 6;
-	GLfloat bound_w = cube_len * size[0];
+	GLfloat bound_x = cube_len * size[0];
+	GLfloat bound_y = cube_len * size[1];
 	// border
 	GLfloat Border[4][4][3] = {
-		{ { 0, 0, 0 }, { 0, 0, bound_h }, { 0, bound_w, bound_h }, { 0, bound_w, 0 } },
-		{ { bound_w, 0, 0 }, { bound_w, 0, bound_h }, { 0, 0, bound_h }, { 0, 0, 0 } },
-		{ { 0, bound_w, 0 }, { 0, bound_w, bound_h }, { bound_w, bound_w, bound_h }, { bound_w, bound_w, 0 } },
-		{ { bound_w, bound_w, 0 }, { bound_w, bound_w, bound_h }, { bound_w, 0, bound_h }, { bound_w, 0, 0 } }
+		{ { 0, 0, 0 }, { 0, 0, bound_h }, { 0, bound_y, bound_h }, { 0, bound_y, 0 } },
+		{ { bound_x, 0, 0 }, { bound_x, 0, bound_h }, { 0, 0, bound_h }, { 0, 0, 0 } },
+		{ { 0, bound_y, 0 }, { 0, bound_y, bound_h }, { bound_x, bound_y, bound_h }, { bound_x, bound_y, 0 } },
+		{ { bound_x, bound_y, 0 }, { bound_x, bound_y, bound_h }, { bound_x, 0, bound_h }, { bound_x, 0, 0 } }
 	};
 	GLfloat Border_norm[4][3] = {
 		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, -1, 0 }, { -1, 0, 0 }
@@ -239,7 +207,7 @@ void Map::drawBorder() const
 
 	// upper
 	GLfloat Upper[4][3] = {
-		{ 0, 0, bound_h }, { 0, bound_w, bound_h }, { bound_w, bound_w, bound_h }, { bound_w, 0, bound_h }
+		{ 0, 0, bound_h }, { 0, bound_y, bound_h }, { bound_x, bound_y, bound_h }, { bound_x, 0, bound_h }
 	};
 	GLfloat Upper_norm[3] = {
 		 0, 0, -1
@@ -279,30 +247,38 @@ void Map::drawBorder() const
 void Map::load(int map_No)
 {
 	this->map_No = map_No;
+	this->step_number = 0;
 
 	ifstream in(this->FilePrefix + to_string(map_No));
 	if (!in)
 		cout << "fail to load map." << endl;
 
 	int buffer;
+	
+	map_data_free();
+	in >> size[0] >> size[1] >> size[2];
+	cout << size << endl;
+	map_data_alloc();
+	
 	// read grids
-	for (int i = size[1] - 1; i >= 0; i--) {
-		for (int j = 0; j < size[0]; j++)
-		{
-			in >> buffer;
-			ObjectID id = (ObjectID)buffer;
+	for (int i = 0; i < size[2]; i++) {
+		for (int j = size[1] - 1; j >= 0; j--) {
+			for (int k = 0; k < size[0]; k++)
+			{
+				in >> buffer;
+				ObjectID id = (ObjectID)buffer;
 
-			delete map_data[0][i][j];
-			if (id == EMPTY_ID)
-				map_data[0][i][j] = new EmptyCube({ j, i, 0 });
-			else if (id == CUBE_ID)
-				map_data[0][i][j] = new SolidCube({ j, i, 0 });
-			else if (id == WALL_ID)
-				map_data[0][i][j] = new WallCube({ j, i, 0 });
-			else if (id == DST_ID)
-				map_data[0][i][j] = new DstCube({ j, i, 0 });
-			else if (id == COMPLETE_ID)
-				map_data[0][i][j] = new CompleteCube({ j, i, 0 });
+				if (id == EMPTY_ID)
+					map_data[0][j][k] = new EmptyCube({ k, j, i });
+				else if (id == CUBE_ID)
+					map_data[0][j][k] = new SolidCube({ k, j, i });
+				else if (id == WALL_ID)
+					map_data[0][j][k] = new WallCube({ k, j, i });
+				else if (id == DST_ID)
+					map_data[0][j][k] = new DstCube({ k, j, i });
+				else if (id == COMPLETE_ID)
+					map_data[0][j][k] = new CompleteCube({ k, j, i });
+			}
 		}
 	}
 
@@ -322,4 +298,37 @@ void Map::load(int map_No)
 void Map::reload()
 {
 	this->load(this->map_No);
+}
+
+void Map::map_data_alloc()
+{
+	map_data = new Object * **[size[2]];
+	for (int i = 0; i < size[2]; i++) {
+		map_data[i] = new Object * *[size[1]];
+		for (int j = 0; j < size[1]; j++) {
+			map_data[i][j] = new Object * [size[0]];
+			for (int k = 0; k < size[0]; k++) {
+				map_data[i][j][k] = nullptr;
+			}
+		}
+	}
+}
+
+void Map::map_data_free()
+{
+	if (map_data) {
+		for (int i = 0; i < size[2]; i++) {
+			for (int j = 0; j < size[1]; j++) {
+				for (int k = 0; k < size[0]; k++) {
+					if (map_data[i][j][k]) {
+						delete map_data[i][j][k];
+					}
+				}
+				delete[] map_data[i][j];
+			}
+			delete[] map_data[i];
+		}
+		delete[] map_data;
+	}
+	map_data = nullptr;
 }

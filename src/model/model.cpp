@@ -30,6 +30,10 @@ namespace Sokoban {
 	const int display_count = 5;
 	vector<GLuint> display_list(display_count);
 
+	// view
+	bool light_mode;
+	int sleep_cnt;
+
 	void init_paras()
 	{
 		init_ctrl_paras();
@@ -48,6 +52,8 @@ namespace Sokoban {
 		windowHandle = 0;
 
 		zoomAngle = 45.0f;
+
+		light_mode = true;
 	}
 
 	void init_map()

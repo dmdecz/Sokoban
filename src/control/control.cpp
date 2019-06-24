@@ -2,9 +2,10 @@
 #include "../model/model.h"
 #include "../bmp.h"
 
-#include "..//view/view.h"
+#include "../view/view.h"
 
 #include <iostream>
+#include <windows.h>
 
 namespace Sokoban {
 
@@ -31,20 +32,19 @@ namespace Sokoban {
 	{
 		switch (key)
 		{
-		//case 'a':
-		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() - vector<int>{1, 0, 0});
-		//	break;
-		//case 'd':
-		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() + vector<int>{1, 0, 0});
-		//	break;
-		//case 'w':
-		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() + vector<int>{0, 1, 0});
-		//	break;
-		//case 's':
-		//	//map.get_object(0, 0, 0)->move_to(map.get_object(0, 0, 0)->get_position() - vector<int>{0, 1, 0});
-		//	break;
+		case 'l': {
+			light_mode = !light_mode;
+		}
 		case ' ': {
 			screen_shot();
+			break;
+		}
+		case 'q': {
+			map.to_prev_map();
+			break;
+		}
+		case 'e': {
+			map.to_next_map();
 			break;
 		}
 		case 'a': {
@@ -65,11 +65,13 @@ namespace Sokoban {
 		case 'z': {
 			zoomAngle += 2.0f;
 			if (zoomAngle > 60.0f) zoomAngle = 60.0f;
+			reshape(window_size[0], window_size[1]);
 			break;
 		}
 		case 'c': {
 			zoomAngle -= 2.0f;
 			if (zoomAngle < 15.0f) zoomAngle = 15.0f;
+			reshape(window_size[0], window_size[1]);
 			break;
 		}
 		case 27: {
@@ -224,15 +226,21 @@ namespace Sokoban {
 				map.set_object(new CompleteCube({x, y, 0}), x, y);
 				map.set_object(new EmptyCube(end_p), end_p[0], end_p[1]);
 				move_cube = map.get_object(x, y);
+				map.add_complete();
 			} else if (move_id == COMPLETE_ID && end_id == EMPTY_ID) {
 				delete map.get_object(x, y);
 				delete map.get_object(end_p[0], end_p[1]);
 				map.set_object(new SolidCube({ x, y, 0 }), x, y);
 				map.set_object(new DstCube(end_p), end_p[0], end_p[1]);
 				move_cube = map.get_object(x, y);
+				map.sub_complete();
 			}
 			
 			move_cube->move_to(end_p[0], end_p[1]);
+			map.add_step();
+			if (map.win()) {
+				sleep_cnt = 1;
+			}
 		}
 	}
 }

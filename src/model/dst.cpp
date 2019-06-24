@@ -11,14 +11,6 @@ void DstCube::register_disp()
 {
 	glMatrixMode(GL_MODELVIEW);
 
-	float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-	float specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-
 	glPushMatrix();
 
 	glDepthMask(GL_FALSE);
@@ -33,7 +25,7 @@ void DstCube::register_disp()
 	GLint borderPoint[4][2] = {
 		{1, 1}, {1, 0}, {0, 0}, {0, 1}
 	};
-	GLfloat half = Sokoban::map.get_cube_len() / 2;
+	GLfloat half = Sokoban::map.get_cube_len() / 2 - 0.001;
 	GLfloat cubeVertex[6][4][3] = {
 		{ { half,  half,  half}, {-half,  half,  half}, {-half, -half,  half}, { half, -half,  half} },
 		{ { half,  half, -half}, { half, -half, -half}, {-half, -half, -half}, {-half,  half, -half} },

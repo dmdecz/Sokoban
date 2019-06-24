@@ -30,6 +30,10 @@ namespace Sokoban
 	extern const int display_count;
 	extern vector<GLuint> display_list;
 
+	// view
+	extern bool light_mode;
+	extern int sleep_cnt;
+
 	// init each
 	void init_map();
 	void init_texture();
@@ -189,6 +193,7 @@ namespace Sokoban
 	{
 	public:
 		static constexpr const char* FilePrefix = "res/map";
+		static const int total_map_number = 5;
 	private:
 		Object**** map_data;
 		vector<int> size;
@@ -205,6 +210,7 @@ namespace Sokoban
 		int dstNum;
 		int completeNum;
 		int map_No;
+		int step_number;
 
 	public:
 		Map(int x_size, int y_size, int z_size = 1);
@@ -227,6 +233,20 @@ namespace Sokoban
 		void drawFloor() const;
 		void drawBorder() const;
 		void draw() const;
+
+		// memory
+		void map_data_alloc();
+		void map_data_free();
+
+		// game
+		void add_complete() { completeNum++; cout << completeNum << endl; }
+		void sub_complete() { completeNum--; cout << completeNum << endl; }
+		void add_step() { step_number++; }
+		bool win() { return completeNum == dstNum; }
+		void to_prev_map() { map_No = map_No > 0 ? map_No - 1 : map_No; reload(); }
+		void to_next_map() { map_No = map_No < total_map_number-1 ? map_No + 1 : map_No; reload(); }
+		int get_step_number() { return step_number; }
+		int get_map_number() { return map_No; }
 	};
 
 	// vector operation
