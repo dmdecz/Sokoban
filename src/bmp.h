@@ -117,6 +117,8 @@ public:
 	void initTexture(uint textureID);
 	// static method to init texture
 	static void initTexture(uchar* RGBdata, uint textureID, int width, int height);
+	// transparent
+	void setTransparent(int a);
 };
 
 #endif

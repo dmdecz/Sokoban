@@ -1,4 +1,5 @@
 #include "model.h"
+#include <string>
 #include <fstream>
 using namespace Sokoban;
 
@@ -36,6 +37,7 @@ Map::Map(int x_size, int y_size, int z_size) : size({ x_size, y_size, z_size })
 
 	dstNum = 0;
 	completeNum = 0;
+	map_No = 0;
 }
 
 Map::~Map()
@@ -154,15 +156,26 @@ void Map::draw() const
 	// draw border
 	drawBorder();
 	// draw each grid
+	vector<Object*> dstCubes;
+	// draw solid grids
 	for (int i = 0; i < size[0]; i++) {
 		for (int j = 0; j < size[1]; j++) {
 			for (int k = 0; k < size[2]; k++) {
-				if (map.get_object(i, j, k)) {
-					map.get_object(i, j, k)->draw();
+				Object *obj = map.get_object(i, j, k);
+				if (!obj)
+					;
+				else if (obj->getID() == DST_ID)
+					dstCubes.push_back(obj);
+				else {
+					obj->draw();
 				}
 			}
 		}
 	}
+	// draw transparent grids
+	for (int i = 0; i < (int)dstCubes.size(); i++)
+		dstCubes[i]->draw();
+
 	glPopMatrix();
 }
 
@@ -193,6 +206,12 @@ void Map::drawBorder() const
 	float half = cube_len / 2;
 	glTranslatef(-half, -half, -half);
 
+	float ambient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
 	// enable texture
 	glEnable(GL_TEXTURE_2D);
 	// set texture coordinary
@@ -252,9 +271,11 @@ void Map::drawBorder() const
 	glPopMatrix();
 }
 
-void Map::load(string filename)
+void Map::load(int map_No)
 {
-	ifstream in(filename);
+	this->map_No = map_No;
+
+	ifstream in(this->FilePrefix + to_string(map_No));
 	if (!in)
 		cout << "fail to load map." << endl;
 
@@ -290,4 +311,9 @@ void Map::load(string filename)
 	Sokoban::eye = this->real_position({ float(x), float(y), Sokoban::eye_h});
 
 	in.close();
+}
+
+void Map::reload()
+{
+	this->load(this->map_No);
 }

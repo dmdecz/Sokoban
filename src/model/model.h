@@ -195,6 +195,7 @@ namespace Sokoban
 		// game parameters
 		int dstNum;
 		int completeNum;
+		int map_No;
 
 	public:
 		Map(int x_size, int y_size, int z_size = 1);
@@ -209,7 +210,8 @@ namespace Sokoban
 		const vector<int>& get_size() const { return size; }
 
 		// load map
-		void load(string filename);
+		void load(int map_No);
+		void reload();
 
 		// draw
 		static void register_disp_floor();
