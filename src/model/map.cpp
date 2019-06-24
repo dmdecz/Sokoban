@@ -40,18 +40,23 @@ Map::Map(int x_size, int y_size, int z_size) : size({ x_size, y_size, z_size })
 
 Map::~Map()
 {
+	cout << "~Map" << endl;
 	for (int i = 0; i < size[2]; i++) {
 		for (int j = 0; j < size[1]; j++) {
 			for (int k = 0; k < size[0]; k++) {
 				if (map_data[i][j][k]) {
 					delete map_data[i][j][k];
 				}
+				cout << "free " << k << j << i << endl;
 			}
 			delete[] map_data[i][j];
+			cout << "free " << j << i << endl;
 		}
 		delete[] map_data[i];
+		cout << "free " << i << endl;
 	}
 	delete[] map_data;
+	cout << "~Map" << endl;
 }
 
 const vector<float> Map::real_position(const vector<float>& position) const
@@ -260,7 +265,7 @@ void Map::load(string filename)
 
 	int buffer;
 	// read grids
-	for (int i = 0; i < size[1]; i++)
+	for (int i = size[1] - 1; i >= 0; i--) {
 		for (int j = 0; j < size[0]; j++)
 		{
 			in >> buffer;
@@ -278,6 +283,7 @@ void Map::load(string filename)
 			else if (id == COMPLETE_ID)
 				map_data[0][i][j] = new CompleteCube({ j, i, 0 });
 		}
+	}
 
 	// read dst number
 	in >> this->dstNum;
