@@ -96,7 +96,7 @@ namespace Sokoban {
 
 		// complete
 		glNewList(display_list[Complete_Disp], GL_COMPILE);
-			CompleteCube::register_disp();
+			//CompleteCube::register_disp();
 		glEndList();
 	}
 

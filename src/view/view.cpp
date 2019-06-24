@@ -87,13 +87,13 @@ namespace Sokoban
 
 	void reshape(int width, int height)
 	{
-		cout << width << 'x' << height << endl;
-		cout << window_size << endl;
+		//cout << width << 'x' << height << endl;
+		//cout << window_size << endl;
 		if (height == 0)
 			height = 1;
 		window_size[0] = width;
 		window_size[1] = height;
-		cout << window_size << endl;
+		//cout << window_size << endl;
 		update_view(width, height);
 	}
 

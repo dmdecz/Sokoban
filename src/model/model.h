@@ -72,7 +72,11 @@ namespace Sokoban
 		virtual bool is_movable() = 0;
 		virtual bool is_moving() = 0;
 		virtual bool can_enter() = 0;
+		// move
+		virtual void move_to(int x, int y, int z = 0) = 0;
+		virtual void move_to(vector<int> end) = 0;
 		virtual const vector<int>& get_position() const = 0;
+		virtual void set_position(const vector<int>& p) = 0;
 	};
 
 	class EmptyCube : public Object
@@ -89,6 +93,10 @@ namespace Sokoban
 		virtual bool is_moving() { return false; }
 		virtual const vector<int>& get_position() const { return position; }
 		virtual bool can_enter() { return true; }
+		virtual void set_position(const vector<int>& p) { position = p; }
+		// move
+		virtual void move_to(int x, int y, int z = 0) {}
+		virtual void move_to(vector<int> end) {}
 		// draw
 		static void register_disp();
 		virtual void draw();
@@ -96,7 +104,7 @@ namespace Sokoban
 
 	class SolidCube : public Object
 	{
-	private:
+	protected:
 		vector<int> position;
 		vector<float> move;
 		bool moving;
@@ -104,7 +112,7 @@ namespace Sokoban
 		void move_once();
 
 	public:
-		SolidCube(const vector<int>& p);
+		SolidCube(const vector<int>& p, ObjectID id = CUBE_ID);
 		virtual ~SolidCube() = default;
 
 		// getters
@@ -112,8 +120,10 @@ namespace Sokoban
 		virtual bool is_moving() { return moving; }
 		virtual const vector<int>& get_position() const { return position; }
 		virtual bool can_enter() { return false; }
+		virtual void set_position(const vector<int>& p) { position = p; }
 		// move
-		void move_to(vector<int> end);
+		virtual void move_to(int x, int y, int z = 0);
+		virtual void move_to(vector<int> end);
 		// draw
 		virtual void draw_directly();
 		virtual void draw();
@@ -133,6 +143,10 @@ namespace Sokoban
 		virtual bool is_moving() { return false; }
 		virtual const vector<int>& get_position() const { return position; }
 		virtual bool can_enter() { return false; }
+		virtual void set_position(const vector<int>& p) { position = p; }
+		// move
+		virtual void move_to(int x, int y, int z = 0) {}
+		virtual void move_to(vector<int> end) {}
 		// draw
 		static void register_disp();
 		virtual void draw();
@@ -152,27 +166,22 @@ namespace Sokoban
 		virtual bool is_moving() { return false; }
 		virtual const vector<int>& get_position() const { return position; }
 		virtual bool can_enter() { return true; }
+		virtual void set_position(const vector<int>& p) { position = p; }
+		// move
+		virtual void move_to(int x, int y, int z = 0) {}
+		virtual void move_to(vector<int> end) {}
 		// draw
 		static void register_disp();
 		virtual void draw();
 	};
 
-	class CompleteCube : public Object
+	class CompleteCube : public SolidCube
 	{
-	private:
-		vector<int> position;
-
 	public:
 		CompleteCube(const vector<int>& p);
 		virtual ~CompleteCube() = default;
-
-		// getters
-		virtual bool is_movable() { return false; }
-		virtual bool is_moving() { return false; }
-		virtual const vector<int>& get_position() const { return position; }
-		virtual bool can_enter() { return false; }
 		// draw
-		static void register_disp();
+		virtual void draw_directly();
 		virtual void draw();
 	};
 
