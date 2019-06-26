@@ -8,7 +8,7 @@ namespace Sokoban {
 	vector<float> eye;
 	vector<float> direction;
 	vector<float> up;
-	vector<int> window_size;
+	vector<int> window_size({ 960, 960 });
 	int windowHandle;
 	float zoomAngle;
 	float eye_h;
@@ -47,8 +47,7 @@ namespace Sokoban {
 		eye = Sokoban::map.real_position({ 0, 0, eye_h });
 		direction = { 0, 0, -1 };
 		up = { 0, 1, 0 };
-
-		window_size = { 700, 700 };
+		
 		windowHandle = 0;
 
 		zoomAngle = 60.0f;
