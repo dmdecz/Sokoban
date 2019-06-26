@@ -8,7 +8,7 @@ namespace Sokoban {
 	vector<float> eye;
 	vector<float> direction;
 	vector<float> up;
-	vector<int> window_size({ 960, 960 });
+	vector<int> window_size({ 700, 700 });
 	int windowHandle;
 	float zoomAngle;
 	float eye_h;
